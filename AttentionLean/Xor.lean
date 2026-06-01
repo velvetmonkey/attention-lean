@@ -1,35 +1,36 @@
 /-
   AttentionLean.Xor
-  Lower bound: no single hard-attention head with affine readout computes XOR.
+  Phase 2: XOR on 2 Boolean inputs is NOT computable by any single
+  hard-attention head, regardless of embedding dimension.
 -/
 import AttentionLean.Compute
 
-open Finset Classical Matrix
+open Finset Classical
 
 noncomputable section
 
-/-- The XOR function on 2-bit inputs. -/
-def xor2 : (Fin 2 → Bool) → Bool := fun x => xor (x 0) (x 1)
+/-- XOR on 2 Boolean inputs. -/
+def xorFn : (Fin 2 → Bool) → Bool := fun x => xor (x 0) (x 1)
+
+/-- Helper: extracting real-number facts from boolean-if equations -/
+private theorem ite_true_eq_false {a : ℝ} :
+    (if a > 0 then true else false) = false ↔ ¬ a > 0 := by
+  split_ifs with h <;> simp [h]
+
+private theorem ite_true_eq_true {a : ℝ} :
+    (if a > 0 then true else false) = true ↔ a > 0 := by
+  split_ifs with h <;> simp [h]
 
 /-
-No single hard-attention head (of any dimension `d`) computes XOR on 2-bit inputs.
-
-    Proof sketch (4-point Boolean enumeration):
-    The score at position `i` depends only on `x(i)` (by the structure of `attentionScore`).
-    For the four inputs `(0,0), (0,1), (1,0), (1,1)`, consider the argmax winner and the
-    affine readout. By case analysis on which position wins in each input, every assignment
-    leads to a contradiction via `linarith` (either the same value is required to be both
-    positive and non-positive, or the score decomposition forces an inconsistent ordering).
+XOR on 2 inputs cannot be computed by any single hard-attention head.
 -/
-theorem xor_not_single_head (d : ℕ) (head : HardAttentionHead 2 d) :
-    ¬ Computes head xor2 := by
-  -- Assume that the head computes XOR.
-  by_contra h_contra
-  have h00 := h_contra ![false, false]
-  have h01 := h_contra ![false, true]
-  have h10 := h_contra ![true, false]
-  have h11 := h_contra ![true, true];
-  unfold xor2 at *; simp_all +decide [ headOutput_two ] ;
+theorem xor_not_computable (d : ℕ) (head : HardAttentionHead 2 d) :
+    ¬ Computes head xorFn := by
+  intro h;
+  -- Let's unfold the definition of `Computes`.
+  unfold Computes at h;
+  simp_all +decide [ headOutput_two ];
+  have h1 := h ![false, false]; have h2 := h ![false, true]; have h3 := h ![true, false]; have h4 := h ![true, true]; simp_all +decide [ xorFn ] ;
   split_ifs at * <;> linarith!;
 
 end
