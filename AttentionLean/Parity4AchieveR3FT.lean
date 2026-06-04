@@ -1,0 +1,14 @@
+/-
+  AttentionLean.Parity4AchieveR3FT
+  Achievability batch 2/4: fixes (r3f, r3t) = (false, true).
+  Iterates 8^8 × 2^6 = 1,073,741,824 head configurations.
+-/
+import AttentionLean.Parity4AchieveDefs
+
+set_option maxHeartbeats 800000000 in
+theorem achieve_batch_r3_ft :
+    ∀ (s0f s0t s1f s1t s2f s2t s3f s3t : Fin 8)
+      (r0f r0t r1f r1t r2f r2t : Bool),
+    inAch4 (mask4Full s0f.val s0t.val s1f.val s1t.val s2f.val s2t.val s3f.val s3t.val
+            r0f r0t r1f r1t r2f r2t false true) = true := by
+  native_decide
