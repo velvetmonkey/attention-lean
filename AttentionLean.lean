@@ -12,6 +12,11 @@ import AttentionLean.Xor
 import AttentionLean.Parity4Data
 import AttentionLean.Parity4AchieveDefs
 import AttentionLean.Parity4AchieveND
+import AttentionLean.Parity4AchieveR3FF
+import AttentionLean.Parity4AchieveR3FT
+import AttentionLean.Parity4AchieveR3TF
+import AttentionLean.Parity4AchieveR3TT
+import AttentionLean.Parity4AchieveAssembly
 import AttentionLean.Parity4Achieve
 import AttentionLean.Parity4TripleA
 import AttentionLean.Parity4TripleB
