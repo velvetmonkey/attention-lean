@@ -7,16 +7,11 @@
                                by the 4 native_decide batches
     mask4Full_eq_sum         ← structural bridge: mask4Full's
                                16-term unrolled mask = ∑ cOutput4
-                               (SKELETON PHASE: sorry-stubbed,
-                               Phase 1 will prove via Fin.sum_univ_succ
-                               + cWinner4 ↔ Bool-and reduction)
     cOutput_in_achievable4_assembled
                              ← apply inAch4_sound_raw to achieve_all
                                after rewriting through the bridge
 
-  Re-exported by Parity4Achieve.lean so cOutput_in_achievable4 has a
-  real proof (no sorry of its own; transitively rests on the 4 batch
-  sorries + 1 bridge sorry in this skeleton).
+  Re-exported by Parity4Achieve.lean.
 -/
 import AttentionLean.Parity4AchieveR3FF
 import AttentionLean.Parity4AchieveR3FT
