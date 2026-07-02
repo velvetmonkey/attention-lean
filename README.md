@@ -7,7 +7,7 @@
 
 Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences.
 
-All theorems use only standard axioms: `propext`, `Classical.choice`, `Quot.sound`.
+The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), is proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
 
 ## Theorems proved
 
