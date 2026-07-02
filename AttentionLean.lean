@@ -4,6 +4,8 @@
   Phase 1: single-head expressiveness bounds for 2-bit Boolean functions.
   Phase 2: AndOr / Xor expressiveness results.
   Phase 3: Parity-on-4-bits requires 4 heads (imported from Aristotle proof run).
+  Phase 4: General parity lower bound — fewer than n heads cannot compute
+           parity on n bits, structurally (no native_decide).
 -/
 import AttentionLean.Defs
 import AttentionLean.Compute
@@ -25,3 +27,5 @@ import AttentionLean.Parity4TripleD
 import AttentionLean.Parity4Triple
 import AttentionLean.ParitySmall
 import AttentionLean.Parity4Main
+import AttentionLean.ParityN
+import AttentionLean.ParityNCompat
