@@ -7,7 +7,9 @@
 
 Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences.
 
-The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), and the windowed lower bound (`ParityWindow`) are proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
+The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), the windowed lower bound (`ParityWindow`), and the general achievability upper bound (`ParityAchieve`) are proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
+
+**Head complexity of parity.** Writing `k(n)` for the least number of heads computing `parityN`: `n ≤ k(n) ≤ 2^(n-1)`, both ends formal (`parityN_requires_N_heads`, `parityN_achievable_with_exp_heads`). At `n = 2` the bounds meet: `k(2) = 2` exactly. `k(3) = 4 = 2^(3-1)`: an exhaustive model-exact search (`scripts/parity_head_search.py`) shows 0 of 152,096 three-head multisets compute parity3 — so "n heads suffice" is FALSE in general — while 4 heads do; the 3-head impossibility remains search evidence (formalizing it would need the `native_decide` enumeration substrate).
 
 ## Theorems proved
 
@@ -25,6 +27,8 @@ The general parity lower bound, `parityN_requires_N_heads` (with `collision_exis
 | `AttentionLean.ParityWindow` | `parityN_requires_window_union` | **Windowed lower bound.** Heads whose argmax provably stays inside windows `W i` cannot compute `parityN` when the windows jointly miss a coordinate (`card (⋃ i, W i) < n`) — with no bound on the number of heads. Incomparable to `parityN_requires_N_heads` (e.g. `n` heads all windowed on one position). Same axioms, no `native_decide`. |
 | `AttentionLean.ParityWindow` | `parityN_requires_window_bound` | Corollary of the union bound: `k` heads of window ≤ `t` need `k·t ≥ n`. (This numeric form also follows from `parityN_requires_N_heads`, since `t ≥ 1` forces `k ≤ k·t < n`; it is kept as the readable "heads × window" reading.) |
 | `AttentionLean.ParityWindow` | `collision_of_fixableK` | t-coordinate generalisation of the collision lemma: `k` functions, each constant after pinning ≤ `t` coordinates on any subcube (`FixableK`), admit an opposite-parity agreeing pair whenever `k·t` is below the free-coordinate count. `Fixable` embeds at `t = 1` (`fixable_fixableK`). |
+| `AttentionLean.ParityAchieve` | `parityN_achievable_with_exp_heads` | **General achievability (upper bound).** For every `n`, `2^(n-1)` hard-attention heads through a thresholded affine readout compute `parityN` — one indicator head per odd-parity point (`indicatorHead`, `indicatorHead_computes`, `card_odd_points`), unit weights, zero bias. The readout shape is verbatim the positive complement of `parityN_requires_N_heads`. Axioms: `propext`, `Classical.choice`, `Quot.sound`, no `native_decide`. |
+| `AttentionLean.ParityAchieve` | `parity2_achievable_with_two_heads` | The `n = 2` instance: with the lower bound at `n = 2`, the exact head complexity of parity2 is 2. |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
@@ -39,6 +43,7 @@ AttentionLean/
 ├── ParityN.lean:       general parity lower bound (parityN_requires_N_heads, collision_exists_n)
 ├── ParityNCompat.lean: parityN compatibility / bridge lemmas
 ├── ParityWindow.lean:  t-fixable generalisation + windowed lower bound (parityN_requires_window_union)
+├── ParityAchieve.lean: general achievability upper bound (parityN_achievable_with_exp_heads)
 ├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
 └── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
 AttentionLean.lean: root module re-exporting all submodules
