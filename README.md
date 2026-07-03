@@ -9,7 +9,7 @@ Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolea
 
 The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), the windowed lower bound (`ParityWindow`), and the general achievability upper bound (`ParityAchieve`) are proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
 
-**Head complexity of parity.** Writing `k(n)` for the least number of heads computing `parityN`: `n ≤ k(n) ≤ 2^(n-1)`, both ends formal (`parityN_requires_N_heads`, `parityN_achievable_with_exp_heads`). At `n = 2` the bounds meet: `k(2) = 2` exactly. `k(3) = 4 = 2^(3-1)`: an exhaustive model-exact search (`scripts/parity_head_search.py`) shows 0 of 152,096 three-head multisets compute parity3 — so "n heads suffice" is FALSE in general — while 4 heads do; the 3-head impossibility remains search evidence (formalizing it would need the `native_decide` enumeration substrate).
+**Head complexity of parity.** Writing `k(n)` for the least number of heads computing `parityN`: `n ≤ k(n) ≤ 2^(n-1)`, both ends formal (`parityN_requires_N_heads`, `parityN_achievable_with_exp_heads`). At `n = 2` the bounds meet: `k(2) = 2` exactly. **`k(3) = 4 = 2^(3-1)` exactly, fully machine-checked at the clean-axiom tier** (`parity3_head_complexity_four`): three heads cannot compute parity3 (`parity3_not_achievable_with_three_heads` — a STRUCTURAL proof, no enumeration, no `native_decide`: every head is constant on a half-cube and line-constant on every face; a decidable 32-shape classification forces antipodal point-indicators on constancy faces; the three signed-direction cases die by a same-inputs pair, a two-face sign clash, or the `T`-vs-antipode kill), while four heads do (`parity3_achievable_with_four_heads`). In particular "n heads suffice" is FALSE in general. The exhaustive search (`scripts/parity_head_search.py`, 0 of 152,096 three-head multisets) stands as independent cross-evidence.
 
 ## Theorems proved
 
@@ -29,6 +29,8 @@ The general parity lower bound, `parityN_requires_N_heads` (with `collision_exis
 | `AttentionLean.ParityWindow` | `collision_of_fixableK` | t-coordinate generalisation of the collision lemma: `k` functions, each constant after pinning ≤ `t` coordinates on any subcube (`FixableK`), admit an opposite-parity agreeing pair whenever `k·t` is below the free-coordinate count. `Fixable` embeds at `t = 1` (`fixable_fixableK`). |
 | `AttentionLean.ParityAchieve` | `parityN_achievable_with_exp_heads` | **General achievability (upper bound).** For every `n`, `2^(n-1)` hard-attention heads through a thresholded affine readout compute `parityN` — one indicator head per odd-parity point (`indicatorHead`, `indicatorHead_computes`, `card_odd_points`), unit weights, zero bias. The readout shape is verbatim the positive complement of `parityN_requires_N_heads`. Axioms: `propext`, `Classical.choice`, `Quot.sound`, no `native_decide`. |
 | `AttentionLean.ParityAchieve` | `parity2_achievable_with_two_heads` | The `n = 2` instance: with the lower bound at `n = 2`, the exact head complexity of parity2 is 2. |
+| `AttentionLean.Parity3Clean` | `parity3_not_achievable_with_three_heads` | **Clean-tier three-head insufficiency.** No 3-head configuration of any internal dimension computes parity3 — structural proof (fixability ⇒ half-cube constancy + face line-constancy; decidable face classification; three-case kill), no enumeration. Axioms: `propext`, `Classical.choice`, `Quot.sound`; no `native_decide`. |
+| `AttentionLean.Parity3Clean` | `parity3_head_complexity_four` | **k(3) = 4 exactly**, both halves clean: the insufficiency above paired with `parity3_achievable_with_four_heads` (instance of the `2^(n-1)` construction at `n = 3`). |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
@@ -44,6 +46,7 @@ AttentionLean/
 ├── ParityNCompat.lean: parityN compatibility / bridge lemmas
 ├── ParityWindow.lean:  t-fixable generalisation + windowed lower bound (parityN_requires_window_union)
 ├── ParityAchieve.lean: general achievability upper bound (parityN_achievable_with_exp_heads)
+├── Parity3Clean.lean:  clean-tier 3-head insufficiency for parity3 (k(3) = 4 exact)
 ├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
 └── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
 AttentionLean.lean: root module re-exporting all submodules

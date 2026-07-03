@@ -22,6 +22,7 @@
 import AttentionLean.ParityN
 import AttentionLean.ParityWindow
 import AttentionLean.ParityAchieve
+import AttentionLean.Parity3Clean
 
 -- General parity lower bound (headline)
 
@@ -60,6 +61,23 @@ info: 'parityN_achievable_with_exp_heads' depends on axioms: [propext, Classical
 info: 'parity2_achievable_with_two_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms parity2_achievable_with_two_heads
+
+-- Exact head complexity of parity3 at clean tier: k(3) = 4
+
+/--
+info: 'parity3_not_achievable_with_three_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parity3_not_achievable_with_three_heads
+
+/--
+info: 'parity3_achievable_with_four_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parity3_achievable_with_four_heads
+
+/--
+info: 'parity3_head_complexity_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parity3_head_complexity_four
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
