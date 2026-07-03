@@ -31,6 +31,7 @@ import AttentionLean.WitnessTightness
 import AttentionLean.WitnessMaj5
 import AttentionLean.WitnessMaj5Lower
 import AttentionLean.FixableNormalForm
+import AttentionLean.ThresholdCatalog
 
 -- General parity lower bound (headline)
 
@@ -331,6 +332,36 @@ info: 'maj5_W1W2_not_completable' depends on axioms: [propext, Classical.choice,
 
 /-- info: 'refines_single_pm' depends on axioms: [propext] -/
 #guard_msgs in #print axioms refines_single_pm
+
+-- Threshold catalog (L1): fixable pairs refining T2of4/T3of4 = the 24-element catalogs
+
+/-- info: 'catalog_sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms catalog_sound
+
+/-- info: 'catalog_card' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms catalog_card
+
+/-- info: 'refining_head_positive' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms refining_head_positive
+
+/--
+info: 'T2_refining_pair_classified' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms T2_refining_pair_classified
+
+/-- info: 'fixable_dualz' depends on axioms: [propext] -/
+#guard_msgs in #print axioms fixable_dualz
+
+/-- info: 'catalog3_sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms catalog3_sound
+
+/-- info: 'catalog3_card' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms catalog3_card
+
+/--
+info: 'T3_refining_pair_classified' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms T3_refining_pair_classified
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
