@@ -34,6 +34,7 @@ import AttentionLean.FixableNormalForm
 import AttentionLean.ThresholdCatalog
 import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
+import AttentionLean.WitnessMaj5HeadsExact
 
 -- General parity lower bound (headline)
 
@@ -414,6 +415,30 @@ info: 'maj5_three_indicator_heads_fail' depends on axioms: [propext, Classical.c
 info: 'maj5_first_three_witnesses_fail' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj5_first_three_witnesses_fail
+
+-- Witness maj5 heads exact (S1): four heads suffice; k_heads(maj5) = 4
+
+/-- info: 'headW1_computes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms headW1_computes
+
+/-- info: 'headW2_computes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms headW2_computes
+
+/-- info: 'headW3_computes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms headW3_computes
+
+/-- info: 'headW4_computes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms headW4_computes
+
+/--
+info: 'maj5_computable_by_four_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_computable_by_four_heads
+
+/--
+info: 'maj5_head_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_head_number_exact
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
