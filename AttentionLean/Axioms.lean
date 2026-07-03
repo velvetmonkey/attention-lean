@@ -24,6 +24,7 @@ import AttentionLean.ParityWindow
 import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
 import AttentionLean.WitnessSeparation
+import AttentionLean.WitnessTheory
 
 -- General parity lower bound (headline)
 
@@ -103,6 +104,49 @@ info: 'parity3_indicator_heads_cannot_separate' depends on axioms: [propext, Cla
 info: 'rank_potentials_cannot_see_flag' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms rank_potentials_cannot_see_flag
+
+-- Witness theory: characterization, counting bound, fixable lower bound
+
+/--
+info: 'witness_computable_iff_refines' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms witness_computable_iff_refines
+
+/--
+info: 'witness_separation_fails_of_char' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms witness_separation_fails_of_char
+
+/-- info: 'witness_counting_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms witness_counting_bound
+
+/--
+info: 'id_fin4_two_bool_witnesses_suffice' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms id_fin4_two_bool_witnesses_suffice
+
+/--
+info: 'id_fin4_one_bool_witness_fails' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms id_fin4_one_bool_witness_fails
+
+/-- info: 'exists_flip_collision' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms exists_flip_collision
+
+/--
+info: 'fixable_witnesses_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms fixable_witnesses_lower_bound
+
+/--
+info: 'parityN_requires_N_heads_of_witness_theory' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parityN_requires_N_heads_of_witness_theory
+
+/--
+info: 'parity3_two_fixable_witnesses_fail' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parity3_two_fixable_witnesses_fail
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"

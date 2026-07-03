@@ -33,3 +33,4 @@ import AttentionLean.ParityWindow
 import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
 import AttentionLean.WitnessSeparation
+import AttentionLean.WitnessTheory
