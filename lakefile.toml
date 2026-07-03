@@ -1,5 +1,5 @@
 name = "RequestProject"
-defaultTargets = ["AttentionLean"]
+defaultTargets = ["AttentionLean", "axiom_check"]
 
 [[require]]
 name = "mathlib"
@@ -9,3 +9,7 @@ rev = "v4.28.0"
 [[lean_lib]]
 name = "AttentionLean"
 globs = ["AttentionLean.+"]
+
+[[lean_exe]]
+name = "axiom_check"
+root = "AttentionLean.Axioms"
