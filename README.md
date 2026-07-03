@@ -7,7 +7,7 @@
 
 Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences.
 
-The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), is proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
+The general parity lower bound, `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), and the windowed lower bound (`ParityWindow`) are proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. The enumerated fixed-width results (the `Parity4*` modules and some `Compute` lemmas) additionally use `native_decide`, which introduces the `Lean.ofReduceBool` axiom.
 
 ## Theorems proved
 
@@ -22,6 +22,9 @@ The general parity lower bound, `parityN_requires_N_heads` (with `collision_exis
 | `AttentionLean.Xor` | `xor_not_single_head` | Proves no single hard-attention head of any internal dimension computes XOR on two-bit inputs. |
 | `AttentionLean.ParityN` | `parityN_requires_N_heads` | **General lower bound (headline).** For every `n` and every `k < n`, no `k` hard-attention heads through a thresholded affine readout compute `parityN`. Axioms: `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. |
 | `AttentionLean.ParityN` | `collision_exists_n` | Fewer than `n` fixable head-functions admit an opposite-parity input pair on which all of them agree: the pigeonhole / subcube collision that drives the general bound. |
+| `AttentionLean.ParityWindow` | `parityN_requires_window_union` | **Windowed lower bound.** Heads whose argmax provably stays inside windows `W i` cannot compute `parityN` when the windows jointly miss a coordinate (`card (⋃ i, W i) < n`) — with no bound on the number of heads. Incomparable to `parityN_requires_N_heads` (e.g. `n` heads all windowed on one position). Same axioms, no `native_decide`. |
+| `AttentionLean.ParityWindow` | `parityN_requires_window_bound` | Corollary of the union bound: `k` heads of window ≤ `t` need `k·t ≥ n`. (This numeric form also follows from `parityN_requires_N_heads`, since `t ≥ 1` forces `k ≤ k·t < n`; it is kept as the readable "heads × window" reading.) |
+| `AttentionLean.ParityWindow` | `collision_of_fixableK` | t-coordinate generalisation of the collision lemma: `k` functions, each constant after pinning ≤ `t` coordinates on any subcube (`FixableK`), admit an opposite-parity agreeing pair whenever `k·t` is below the free-coordinate count. `Fixable` embeds at `t = 1` (`fixable_fixableK`). |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
@@ -35,6 +38,7 @@ AttentionLean/
 ├── Xor.lean:           single-head lower bound for XOR
 ├── ParityN.lean:       general parity lower bound (parityN_requires_N_heads, collision_exists_n)
 ├── ParityNCompat.lean: parityN compatibility / bridge lemmas
+├── ParityWindow.lean:  t-fixable generalisation + windowed lower bound (parityN_requires_window_union)
 ├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
 └── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
 AttentionLean.lean: root module re-exporting all submodules

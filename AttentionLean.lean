@@ -29,3 +29,4 @@ import AttentionLean.ParitySmall
 import AttentionLean.Parity4Main
 import AttentionLean.ParityN
 import AttentionLean.ParityNCompat
+import AttentionLean.ParityWindow
