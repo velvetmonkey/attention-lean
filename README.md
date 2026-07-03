@@ -48,6 +48,7 @@ The same kernel instantiates outside attention: `potential_separation_fails` sho
 | `AttentionLean.WitnessTheory` | `witness_counting_bound` | **Information-capacity lower bound**: finite witness values + target injective on `A` ⇒ `|A| ≤ |V|^k`. Tight instance: identity on `Fin 4` — one Bool witness provably fails, two provably suffice. Scope: high-image targets only; does not subsume the parity bound. |
 | `AttentionLean.WitnessTheory` | `fixable_witnesses_lower_bound` | **Sensitivity lower bound (the general theorem behind the parity bound)**: an everywhere-sensitive target on `n` Boolean coordinates is computed by no aggregator over `k < n` `Fixable` witnesses. `parityN_requires_N_heads` recovered verbatim as a corollary (`parityN_requires_N_heads_of_witness_theory`); strictly more general in the aggregator. |
 | `AttentionLean.WitnessEmbedding` | `restriction_embedding_lower_bound` | **Embedding lower bound**: a target with a restriction that is everywhere-sensitive on `m` free coordinates is computed by no aggregator over `k < m` `Fixable` witnesses. Crux: fixability survives restriction (`fixable_restrict`). Instance: inner product mod 2 on `2m` bits — provably NOT everywhere-sensitive, yet embeds parity on the even coordinates, so it needs ≥ m fixable witnesses (`ip2_needs_m_fixable_witnesses`). Reach note: monotone targets (e.g. majority) are OUT — restrictions of monotone functions are monotone, everywhere-sensitive functions on ≥ 2 coordinates are not. |
+| `AttentionLean.WitnessMajority` | `maj_needs_half_fixable_witnesses` | **Majority settled HARD**: any aggregator over `k` fixable witnesses with `2k < n` fails against strict majority — `k(maj_n) ≥ ⌈n/2⌉` — via the subcube-nonconstancy bound `fixable_witnesses_lower_bound_of_nonconstant` (a certificate-style measure: `k` fixable witnesses pin ≤ `k` coordinates, and fewer than `n/2` pinned votes never decide majority). Upper bracket: `n` fixable dictators + `maj` as aggregator compute it (`maj_computable_by_n_fixable`); exact `k(maj)` in `[⌈n/2⌉, n]` open. |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
@@ -67,6 +68,7 @@ AttentionLean/
 ├── WitnessSeparation.lean: abstract collision ⇒ non-computation kernel + two instances
 ├── WitnessTheory.lean: computability characterization + counting & fixable lower bounds
 ├── WitnessEmbedding.lean: restriction/embedding lower bound + inner-product instance
+├── WitnessMajority.lean: subcube-nonconstancy bound; majority needs ≥ ⌈n/2⌉ witnesses
 ├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
 └── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
 AttentionLean.lean: root module re-exporting all submodules

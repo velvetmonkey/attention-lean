@@ -26,6 +26,7 @@ import AttentionLean.Parity3Clean
 import AttentionLean.WitnessSeparation
 import AttentionLean.WitnessTheory
 import AttentionLean.WitnessEmbedding
+import AttentionLean.WitnessMajority
 
 -- General parity lower bound (headline)
 
@@ -176,6 +177,34 @@ info: 'ip2_needs_m_fixable_witnesses' depends on axioms: [propext, Classical.cho
 info: 'ip2_four_bits_one_head_fails' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms ip2_four_bits_one_head_fails
+
+-- Witness majority: subcube-nonconstancy bound; majority settled HARD
+
+/--
+info: 'fixable_witnesses_lower_bound_of_nonconstant' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms fixable_witnesses_lower_bound_of_nonconstant
+
+/--
+info: 'maj_nonconstant_on_small_subcubes' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_nonconstant_on_small_subcubes
+
+/--
+info: 'maj_needs_half_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_needs_half_fixable_witnesses
+
+/-- info: 'dictator_fixable' depends on axioms: [propext] -/
+#guard_msgs in #print axioms dictator_fixable
+
+/--
+info: 'maj_computable_by_n_fixable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_computable_by_n_fixable
+
+/-- info: 'maj3_one_head_fails' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj3_one_head_fails
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
