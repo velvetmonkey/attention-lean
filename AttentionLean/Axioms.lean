@@ -33,6 +33,7 @@ import AttentionLean.WitnessMaj5Lower
 import AttentionLean.FixableNormalForm
 import AttentionLean.ThresholdCatalog
 import AttentionLean.WitnessMaj5Exact
+import AttentionLean.WitnessMaj5Heads
 
 -- General parity lower bound (headline)
 
@@ -396,6 +397,23 @@ info: 'maj5_no_three_fixable_witnesses' depends on axioms: [propext, Classical.c
 info: 'maj5_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj5_witness_number_exact
+
+-- Witness maj5 heads: the attention-expressivity face of k(maj5) = 4
+
+/--
+info: 'maj5_requires_four_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_requires_four_heads
+
+/--
+info: 'maj5_three_indicator_heads_fail' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_three_indicator_heads_fail
+
+/--
+info: 'maj5_first_three_witnesses_fail' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_first_three_witnesses_fail
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"

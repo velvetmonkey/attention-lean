@@ -42,3 +42,4 @@ import AttentionLean.WitnessMaj5Lower
 import AttentionLean.FixableNormalForm
 import AttentionLean.ThresholdCatalog
 import AttentionLean.WitnessMaj5Exact
+import AttentionLean.WitnessMaj5Heads
