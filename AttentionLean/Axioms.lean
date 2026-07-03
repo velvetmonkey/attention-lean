@@ -32,6 +32,7 @@ import AttentionLean.WitnessMaj5
 import AttentionLean.WitnessMaj5Lower
 import AttentionLean.FixableNormalForm
 import AttentionLean.ThresholdCatalog
+import AttentionLean.WitnessMaj5Exact
 
 -- General parity lower bound (headline)
 
@@ -362,6 +363,39 @@ info: 'T2_refining_pair_classified' depends on axioms: [propext, Classical.choic
 info: 'T3_refining_pair_classified' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms T3_refining_pair_classified
+
+-- Witness maj5 exact (S2/L2-L4): k(maj5) = 4 fully in the kernel
+
+/-- info: 'fixable_restrictAt' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms fixable_restrictAt
+
+/-- info: 'face_classified' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms face_classified
+
+/-- info: 'hasLitB_of_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms hasLitB_of_fixable
+
+/-- info: 'case2_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms case2_dead
+
+/-- info: 'fixable_reindex' does not depend on any axioms -/
+#guard_msgs in #print axioms fixable_reindex
+
+/-- info: 'maj_reindex' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj_reindex
+
+/-- info: 'case3_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms case3_dead
+
+/--
+info: 'maj5_no_three_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_no_three_fixable_witnesses
+
+/--
+info: 'maj5_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_witness_number_exact
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
