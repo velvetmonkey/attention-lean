@@ -57,6 +57,7 @@ The same kernel instantiates outside attention: `potential_separation_fails` sho
 | `AttentionLean.WitnessMaj5Exact` | `maj5_witness_number_exact` | **k(maj₅) = 4, kernel-complete — the first gap is a theorem**: no three fixable witnesses compute maj₅ (`maj5_no_three_fixable_witnesses`), four do. Route: `maj5_reduction` → face classifications via the L1 catalogs (`fixable_restrictAt` face restriction, `face_classified`) → case-2 kill (the doubly-classified third witness is unfixable for all 2,880 parameters; per-direction hitting-list decides) and case-3 kill (coordinate permutation to canonical directions; per-witness decides: unfixable or on an explicit 16-entry bad list; bad lists mutually incompatible — `case3_compat`). Retires the exhaustive-search dependency; subsumes the bracket. |
 | `AttentionLean.WitnessMaj5Heads` | `maj5_requires_four_heads` | **maj₅ requires four hard-attention heads**: no 3 heads + thresholded affine readout compute strict majority on 5 bits — the attention face of k(maj₅) = 4, by instantiating `maj5_no_three_fixable_witnesses` with `headOutput_fixable` (no sensitivity argument applies: maj₅ is not everywhere-sensitive). Non-vacuity: three concrete indicator heads fail against EVERY aggregator; the shipped construction's first three witnesses cannot be completed. Positive side (4 heads suffice) flagged: needs the DL-to-head realization (AttentionBridge S1). |
 | `AttentionLean.WitnessMaj5HeadsExact` | `maj5_head_number_exact` | **k_heads(maj₅) = 4, exact**: four hard-attention heads + the linear-threshold readout v₀+v₁+2v₂+2v₃ > 3/2 compute maj₅, and three cannot. Positive side = S1: each shipped witness maj5W1..W4 is a five-literal decision list, realized by a `tableHead` (indicatorHead pattern, dimension 2) with descending scores on list literals, zero on complements, ±1 reads; the argmax lands on the first live literal or falls to the score-0 tie at position 0 (the default). |
+| `AttentionLean.DecisionListHeads` | `head_output_iff_fixable` | **The bridge theorem**: a Boolean function is a hard-attention head output iff it is Fixable iff it is a decision list. Forward: general DL→head realization (`dl_realizable_by_head`, dimension 2 always suffices) via priority lists with fall-through score/read tables — no well-formedness needed, duplicates resolve identically in the evaluator and the argmax. Reverse: `headOutput_fixable`. Consequence: `heads_computability_iff_fixable_witnesses` — for arbitrary aggregators, k-head computability = k-witness computability (affine-readout upper transfers only for threshold-affine aggregators). |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
@@ -85,6 +86,7 @@ AttentionLean/
 ├── WitnessMaj5Exact.lean: k(maj₅) = 4 fully in the kernel (L2-L4 closed)
 ├── WitnessMaj5Heads.lean: maj₅ requires four hard-attention heads
 ├── WitnessMaj5HeadsExact.lean: four heads suffice — k_heads(maj₅) = 4 exact
+├── DecisionListHeads.lean: bridge theorem — Fixable = decision lists = head outputs
 ├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
 └── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
 AttentionLean.lean: root module re-exporting all submodules
@@ -107,3 +109,18 @@ This command returns nothing for the checked source tree.
 ## License
 
 MIT. See [LICENSE](LICENSE). Copyright (c) 2026 Ben Cassie.
+
+## Bridge theorem: Fixable = decision lists = hard-attention head outputs
+
+`head_output_iff_fixable` (DecisionListHeads.lean) closes the characterization
+of single-head expressivity: a Boolean function on n bits is the output of some
+hard-attention head **iff** it is `Fixable` **iff** (by `fixable_iff_dl`) it is
+a decision list. Consequently (`heads_computability_iff_fixable_witnesses`),
+for arbitrary aggregators, computability by k heads coincides with
+computability by k Fixable witnesses: every witness-number upper bound
+transfers to heads (dimension 2 suffices), and every head-count lower bound is
+provable in witness space. Caveat: with a thresholded affine readout on the
+head side, upper bounds transfer only when the witness-side aggregator is
+itself threshold-affine. Exact head counts now kernel-proved: parity_n = n
+(lower; 2^(n-1) upper), maj3-witnesses = 2, maj5 heads = witnesses = 4 — with
+maj5 strictly above its certificate complexity 3.

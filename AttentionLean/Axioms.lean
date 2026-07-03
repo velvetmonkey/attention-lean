@@ -35,6 +35,7 @@ import AttentionLean.ThresholdCatalog
 import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
+import AttentionLean.DecisionListHeads
 
 -- General parity lower bound (headline)
 
@@ -439,6 +440,29 @@ info: 'maj5_computable_by_four_heads' depends on axioms: [propext, Classical.cho
 info: 'maj5_head_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj5_head_number_exact
+
+-- Decision-list heads: the bridge theorem (Fixable = DL = head outputs)
+
+/-- info: 'priorityDL_realizable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms priorityDL_realizable
+
+/-- info: 'dl_realizable_by_head' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms dl_realizable_by_head
+
+/--
+info: 'fixable_realizable_by_head' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms fixable_realizable_by_head
+
+/--
+info: 'head_output_iff_fixable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms head_output_iff_fixable
+
+/--
+info: 'heads_computability_iff_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms heads_computability_iff_fixable_witnesses
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"

@@ -44,3 +44,4 @@ import AttentionLean.ThresholdCatalog
 import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
+import AttentionLean.DecisionListHeads
