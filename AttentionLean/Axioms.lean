@@ -7,15 +7,17 @@
   in the lake defaultTargets, so any axiom drift fails a bare `lake build`
   itself. Ported verbatim from the seal-host Test/Axioms.lean convention.
 
-  DELIBERATELY NOT PINNED: the enumerated fixed-width lower bounds
-  `parity3_requires_three_heads` (ParitySmall) and
-  `parity4_requires_four_heads` (Parity4Main). Both are proved by
-  `native_decide` and therefore carry `Lean.ofReduceBool` and
-  `Lean.trustCompiler` BY DESIGN — documented in README.md ("The enumerated
-  fixed-width results … additionally use native_decide"). They fall outside
-  the clean-axiom bar this gate enforces, so they are excluded rather than
-  pinned over; the general theorems below subsume their content at the
-  clean-axiom tier.
+  EXPECTED-DIRTY, PINNED IN A COMPANION: the enumerated fixed-width lower
+  bounds `parity3_requires_three_heads` (ParitySmall) and
+  `parity4_requires_four_heads` (Parity4Main) are proved by `native_decide`,
+  so they carry `Lean.ofReduceBool` and `Lean.trustCompiler` BY DESIGN
+  (documented in README.md). They do NOT meet the clean-axiom bar this exe
+  reports on. They ARE pinned, with their full expected footprint, in
+  `AttentionLean/AxiomsDirty.lean` (a lib module built and hence gated by a
+  bare `lake build`, so a `sorryAx` creep there still fails the build). They
+  live in a companion rather than here because importing the native_decide
+  modules into this executable root makes the `axiom_check` binary heavy to
+  run; the compile-time gate is identical either way.
 -/
 import AttentionLean.ParityN
 import AttentionLean.ParityWindow
