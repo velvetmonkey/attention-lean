@@ -23,6 +23,7 @@ import AttentionLean.ParityN
 import AttentionLean.ParityWindow
 import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
+import AttentionLean.WitnessSeparation
 
 -- General parity lower bound (headline)
 
@@ -78,6 +79,30 @@ info: 'parity3_achievable_with_four_heads' depends on axioms: [propext, Classica
 info: 'parity3_head_complexity_four' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms parity3_head_complexity_four
+
+-- Witness separation: the abstract collision ⇒ non-computation kernel
+
+/-- info: 'witness_separation_fails' depends on axioms: [Quot.sound] -/
+#guard_msgs in #print axioms witness_separation_fails
+
+/--
+info: 'parity3_indicator_heads_cannot_separate' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parity3_indicator_heads_cannot_separate
+
+/-- info: 'indicator_heads_collide' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms indicator_heads_collide
+
+/-- info: 'parity_separates_antipodes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms parity_separates_antipodes
+
+/-- info: 'potential_separation_fails' depends on axioms: [Quot.sound] -/
+#guard_msgs in #print axioms potential_separation_fails
+
+/--
+info: 'rank_potentials_cannot_see_flag' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms rank_potentials_cannot_see_flag
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"

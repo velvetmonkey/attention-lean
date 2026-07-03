@@ -56,6 +56,7 @@
 import AttentionLean.Defs
 import AttentionLean.ParityN
 import AttentionLean.ParityAchieve
+import AttentionLean.WitnessSeparation
 
 open Finset Classical
 
@@ -353,12 +354,34 @@ theorem kill3 {A B C : (Fin 3 → Bool) → Bool} {wa wb wc bias : ℝ}
         + wc * (if C x then (1 : ℝ) else 0) + bias)
     (x y : Fin 3 → Bool) (hA : A x = A y) (hB : B x = B y) (hC : C x = C y)
     (hpar : parityN x ≠ parityN y) : False := by
-  have h1 := hyp x
-  have h2 := hyp y
-  rw [hA, hB, hC] at h1
-  have h12 := h1.trans h2.symm
-  apply hpar
-  cases hpx : parityN x <;> cases hpy : parityN y <;> simp_all
+  -- the collision ⇒ non-computation kernel, instantiated at the heads'
+  -- Boolean shadows and the thresholded affine readout
+  apply witness_separation_fails parityN (fun i => ![A, B, C] i)
+    (fun v => if 0 < wa * (if v 0 then (1 : ℝ) else 0)
+      + wb * (if v 1 then (1 : ℝ) else 0)
+      + wc * (if v 2 then (1 : ℝ) else 0) + bias then true else false)
+    x y ?_ hpar
+  · -- the threshold computes parityN, pointwise from the iff hypothesis
+    funext s
+    show (if 0 < wa * (if A s then (1 : ℝ) else 0)
+      + wb * (if B s then (1 : ℝ) else 0)
+      + wc * (if C s then (1 : ℝ) else 0) + bias then true else false)
+      = parityN s
+    by_cases hs : 0 < wa * (if A s then (1 : ℝ) else 0)
+        + wb * (if B s then (1 : ℝ) else 0)
+        + wc * (if C s then (1 : ℝ) else 0) + bias
+    · rw [if_pos hs]
+      exact ((hyp s).mpr hs).symm
+    · rw [if_neg hs]
+      cases hp : parityN s
+      · rfl
+      · exact absurd ((hyp s).mp hp) hs
+  · -- the witness collision
+    intro i
+    fin_cases i
+    · exact hA
+    · exact hB
+    · exact hC
 
 /-- Package a face restriction as one of the 32 `lineFn` shapes, from the
     face-line extraction data. -/

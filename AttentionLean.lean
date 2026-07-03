@@ -32,3 +32,4 @@ import AttentionLean.ParityNCompat
 import AttentionLean.ParityWindow
 import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
+import AttentionLean.WitnessSeparation
