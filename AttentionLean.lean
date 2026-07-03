@@ -37,3 +37,4 @@ import AttentionLean.WitnessTheory
 import AttentionLean.WitnessEmbedding
 import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
+import AttentionLean.WitnessMaj5

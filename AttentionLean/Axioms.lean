@@ -28,6 +28,7 @@ import AttentionLean.WitnessTheory
 import AttentionLean.WitnessEmbedding
 import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
+import AttentionLean.WitnessMaj5
 
 -- General parity lower bound (headline)
 
@@ -245,6 +246,33 @@ info: 'parityN_witness_number_exact' depends on axioms: [propext, Classical.choi
 info: 'ip2_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms ip2_witness_number_exact
+
+-- Witness maj5: k(maj5) = 4 — the first gap past certificate complexity
+
+/-- info: 'maj5W1_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5W1_fixable
+
+/-- info: 'maj5W2_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5W2_fixable
+
+/-- info: 'maj5W3_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5W3_fixable
+
+/-- info: 'maj5W4_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5W4_fixable
+
+/--
+info: 'maj5_eq_four_witness_combination' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_eq_four_witness_combination
+
+/--
+info: 'maj5_computable_by_four_fixable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_computable_by_four_fixable
+
+/-- info: 'maj5_witness_bracket' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5_witness_bracket
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
