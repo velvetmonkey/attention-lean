@@ -39,3 +39,4 @@ import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
 import AttentionLean.WitnessMaj5
 import AttentionLean.WitnessMaj5Lower
+import AttentionLean.FixableNormalForm

@@ -30,6 +30,7 @@ import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
 import AttentionLean.WitnessMaj5
 import AttentionLean.WitnessMaj5Lower
+import AttentionLean.FixableNormalForm
 
 -- General parity lower bound (headline)
 
@@ -301,6 +302,35 @@ info: 'maj5_W1W2_not_completable' depends on axioms: [propext, Classical.choice,
 
 /-- info: 'maj5_reduction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms maj5_reduction
+
+-- Fixable normal form (R4a): Fixable = decision lists; oracle |Fixable(3)| = 96
+
+/-- info: 'dl_fixable' depends on axioms: [propext] -/
+#guard_msgs in #print axioms dl_fixable
+
+/-- info: 'fixable_exists_dl' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms fixable_exists_dl
+
+/-- info: 'fixable_iff_dl' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms fixable_iff_dl
+
+/-- info: 'majW1_has_dl' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms majW1_has_dl
+
+/-- info: 'card_fixable3' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms card_fixable3
+
+/-- info: 'maj3_not_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj3_not_fixable
+
+/-- info: 'T2of4_not_pm_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms T2of4_not_pm_fixable
+
+/-- info: 'T3of4_not_pm_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms T3of4_not_pm_fixable
+
+/-- info: 'refines_single_pm' depends on axioms: [propext] -/
+#guard_msgs in #print axioms refines_single_pm
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
