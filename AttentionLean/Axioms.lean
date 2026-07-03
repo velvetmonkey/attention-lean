@@ -25,6 +25,7 @@ import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
 import AttentionLean.WitnessSeparation
 import AttentionLean.WitnessTheory
+import AttentionLean.WitnessEmbedding
 
 -- General parity lower bound (headline)
 
@@ -147,6 +148,34 @@ info: 'parityN_requires_N_heads_of_witness_theory' depends on axioms: [propext, 
 info: 'parity3_two_fixable_witnesses_fail' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms parity3_two_fixable_witnesses_fail
+
+-- Witness embedding: restriction lower bound past everywhere-sensitivity
+
+/-- info: 'fixable_restrict' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms fixable_restrict
+
+/--
+info: 'restriction_embedding_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms restriction_embedding_lower_bound
+
+/-- info: 'ip2_embed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms ip2_embed
+
+/--
+info: 'ip2_not_everywhere_sensitive' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms ip2_not_everywhere_sensitive
+
+/--
+info: 'ip2_needs_m_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms ip2_needs_m_fixable_witnesses
+
+/--
+info: 'ip2_four_bits_one_head_fails' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms ip2_four_bits_one_head_fails
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
