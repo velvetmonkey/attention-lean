@@ -27,6 +27,7 @@ import AttentionLean.WitnessSeparation
 import AttentionLean.WitnessTheory
 import AttentionLean.WitnessEmbedding
 import AttentionLean.WitnessMajority
+import AttentionLean.WitnessTightness
 
 -- General parity lower bound (headline)
 
@@ -205,6 +206,45 @@ info: 'maj_computable_by_n_fixable' depends on axioms: [propext, Classical.choic
 
 /-- info: 'maj3_one_head_fails' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms maj3_one_head_fails
+
+-- Witness tightness: exact witness numbers (maj3 = 2, parity = n, ip2 = m)
+
+/-- info: 'every_target_computable_by_n_dictators' depends on axioms: [propext] -/
+#guard_msgs in #print axioms every_target_computable_by_n_dictators
+
+/-- info: 'majW1_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms majW1_fixable
+
+/-- info: 'majW2_fixable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms majW2_fixable
+
+/--
+info: 'maj3_eq_two_witness_combination' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj3_eq_two_witness_combination
+
+/--
+info: 'maj3_computable_by_two_fixable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj3_computable_by_two_fixable
+
+/--
+info: 'maj3_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj3_witness_number_exact
+
+/--
+info: 'parityN_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms parityN_witness_number_exact
+
+/-- info: 'and_pair_fixable' depends on axioms: [propext] -/
+#guard_msgs in #print axioms and_pair_fixable
+
+/--
+info: 'ip2_witness_number_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms ip2_witness_number_exact
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
