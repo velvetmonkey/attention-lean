@@ -20,16 +20,24 @@ The general parity lower bound, `parityN_requires_N_heads` (with `collision_exis
 | `AttentionLean.AndOr` | `and_one_head` | Constructs a single one-dimensional hard-attention head computing Boolean AND on two-bit inputs. |
 | `AttentionLean.AndOr` | `or_one_head` | Constructs a single one-dimensional hard-attention head computing Boolean OR on two-bit inputs. |
 | `AttentionLean.Xor` | `xor_not_single_head` | Proves no single hard-attention head of any internal dimension computes XOR on two-bit inputs. |
+| `AttentionLean.ParityN` | `parityN_requires_N_heads` | **General lower bound (headline).** For every `n` and every `k < n`, no `k` hard-attention heads through a thresholded affine readout compute `parityN`. Axioms: `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. |
+| `AttentionLean.ParityN` | `collision_exists_n` | Fewer than `n` fixable head-functions admit an opposite-parity input pair on which all of them agree: the pigeonhole / subcube collision that drives the general bound. |
+| `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
+| `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
 ## Module structure
 
 ```text
 AttentionLean/
-├── Defs.lean    — HardAttentionHead, scores, value reads, argmax, head output
-├── Compute.lean — Computes predicate and two-token helper theorems
-├── AndOr.lean   — single-head constructions for AND and OR
-└── Xor.lean     — single-head lower bound for XOR
-AttentionLean.lean — root module re-exporting all submodules
+├── Defs.lean:          HardAttentionHead, scores, value reads, argmax, head output
+├── Compute.lean:       Computes predicate and two-token helper theorems
+├── AndOr.lean:         single-head constructions for AND and OR
+├── Xor.lean:           single-head lower bound for XOR
+├── ParityN.lean:       general parity lower bound (parityN_requires_N_heads, collision_exists_n)
+├── ParityNCompat.lean: parityN compatibility / bridge lemmas
+├── ParitySmall.lean:   enumerated n=3 lower bound (parity3_requires_three_heads)
+└── Parity4*.lean:      enumerated n=4 lower bound (parity4_requires_four_heads) + achievability batches
+AttentionLean.lean: root module re-exporting all submodules
 ```
 
 ## Building
