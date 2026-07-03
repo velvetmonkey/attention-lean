@@ -29,6 +29,7 @@ import AttentionLean.WitnessEmbedding
 import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
 import AttentionLean.WitnessMaj5
+import AttentionLean.WitnessMaj5Lower
 
 -- General parity lower bound (headline)
 
@@ -273,6 +274,33 @@ info: 'maj5_computable_by_four_fixable' depends on axioms: [propext, Classical.c
 
 /-- info: 'maj5_witness_bracket' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms maj5_witness_bracket
+
+-- Witness maj5 lower: the structural reduction toward k(maj5) >= 4
+
+/-- info: 'fixable_const_halfcube' does not depend on any axioms -/
+#guard_msgs in #print axioms fixable_const_halfcube
+
+/-- info: 'fixable_update_restrict' depends on axioms: [propext] -/
+#guard_msgs in #print axioms fixable_update_restrict
+
+/--
+info: 'maj_nonconst_of_pin_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_nonconst_of_pin_bounds
+
+/-- info: 'maj5_shared_face_kill' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5_shared_face_kill
+
+/--
+info: 'maj5_W1W2_not_completable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj5_W1W2_not_completable
+
+/-- info: 'maj5_mixed_signs_kill' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5_mixed_signs_kill
+
+/-- info: 'maj5_reduction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms maj5_reduction
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
