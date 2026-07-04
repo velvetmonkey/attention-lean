@@ -1,5 +1,5 @@
 name = "RequestProject"
-defaultTargets = ["AttentionLean", "axiom_check"]
+defaultTargets = ["AttentionLean", "axiom_check", "adequacy_oracle"]
 
 [[require]]
 name = "mathlib"
@@ -13,3 +13,7 @@ globs = ["AttentionLean.+"]
 [[lean_exe]]
 name = "axiom_check"
 root = "AttentionLean.Axioms"
+
+[[lean_exe]]
+name = "adequacy_oracle"
+root = "AttentionLean.AdequacyOracleMain"

@@ -36,6 +36,7 @@ import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
+import AttentionLean.AdequacyOracle
 
 -- General parity lower bound (headline)
 
@@ -463,6 +464,13 @@ info: 'head_output_iff_fixable' depends on axioms: [propext, Classical.choice, Q
 info: 'heads_computability_iff_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms heads_computability_iff_fixable_witnesses
+
+-- Finite adequacy oracle anchor
+
+/--
+info: 'AttentionLean.AdequacyOracle.witnessAdequacyOracle_anchor' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms AttentionLean.AdequacyOracle.witnessAdequacyOracle_anchor
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
