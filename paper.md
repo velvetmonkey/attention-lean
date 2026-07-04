@@ -5,7 +5,7 @@ Independent Researcher
 bencassie@outlook.com  
 ORCID: 0009-0004-1899-7627
 
-DOI: TBD.
+Published on Zenodo. DOI: 10.5281/zenodo.21188381.
 
 ## Abstract
 
@@ -136,4 +136,4 @@ Within a deliberately narrow hard-attention model, the library gives a complete,
 
 ## Artifact availability
 
-Source: `github.com/velvetmonkey/attention-lean` (tag to accompany the Zenodo deposit; DOI TBD). Build: `lake build` with `elan`-pinned `leanprover/lean4:v4.28.0`; the axiom gate runs as part of the default targets and via `lake exe axiom_check`. This paper: `bash build-pdf.sh` (pandoc + tectonic + JuliaMono).
+Source: `github.com/velvetmonkey/attention-lean` (Zenodo deposit DOI: 10.5281/zenodo.21188381). Build: `lake build` with `elan`-pinned `leanprover/lean4:v4.28.0`; the axiom gate runs as part of the default targets and via `lake exe axiom_check`. This paper: `bash build-pdf.sh` (pandoc + tectonic + JuliaMono).
