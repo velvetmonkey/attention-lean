@@ -1,6 +1,6 @@
 # attention-lean: distribution copy (bridge-theorem lead)
 
-Draft outreach copy for the `attention-lean` release. The paper (`paper.md`, Zenodo DOI 10.5281/zenodo.21188381) leads with the scope caveat by design, correct for a paper. These are the distribution-facing versions that lead with the punchline instead. Nothing here changes the frozen artifact.
+Draft outreach copy for the `attention-lean` release. The paper (`paper.md`, Zenodo DOI 10.5281/zenodo.21188380) leads with the scope caveat by design, correct for a paper. These are the distribution-facing versions that lead with the punchline instead. Nothing here changes the frozen artifact.
 
 Prompted by an external review (Grok, 2026-07-04) that judged the work legitimate and flagged "lead with the bridge theorem" for reception. That framing belongs here, not in the paper.
 
@@ -19,7 +19,7 @@ Everything is kernel-checked on the axiom footprint {propext, Classical.choice, 
 Scope is deliberately narrow: single layer, position-local scores, thresholded affine readout, Boolean inputs. It is not a claim about deployed transformers. Scrutiny welcome, especially on the model choices.
 
 Repo: github.com/velvetmonkey/attention-lean
-Paper + DOI: 10.5281/zenodo.21188381
+Paper + DOI: 10.5281/zenodo.21188380
 
 ## arXiv teaser / short abstract (bridge-first ordering)
 

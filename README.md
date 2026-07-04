@@ -3,7 +3,7 @@
 [![Lean 4](https://img.shields.io/badge/Lean-4.28.0-blue)](https://lean-lang.org/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-v4.28.0-purple)](https://github.com/leanprover-community/mathlib4)
 [![Proofs](https://img.shields.io/badge/proofs-proven%20%2F%200%20sorry-brightgreen)](AttentionLean)
-[![DOI](https://img.shields.io/badge/DOI-TODO-lightgrey)](#)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21188380.svg)](https://doi.org/10.5281/zenodo.21188380)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences.
