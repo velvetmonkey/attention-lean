@@ -45,3 +45,4 @@ import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
+import AttentionLean.WitnessMaj7Bracket

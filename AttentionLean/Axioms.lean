@@ -36,6 +36,7 @@ import AttentionLean.WitnessMaj5Exact
 import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
+import AttentionLean.WitnessMaj7Bracket
 
 -- General parity lower bound (headline)
 
@@ -463,6 +464,33 @@ info: 'head_output_iff_fixable' depends on axioms: [propext, Classical.choice, Q
 info: 'heads_computability_iff_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms heads_computability_iff_fixable_witnesses
+
+-- Witness maj7 bracket: 4 ≤ k_witness(maj7), k_heads(maj7) ≤ 6 and ≥ 4
+
+/--
+info: 'maj7_eq_six_witness_combination_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_eq_six_witness_combination_bits
+
+/--
+info: 'maj7_eq_six_witness_combination' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_eq_six_witness_combination
+
+/--
+info: 'maj7_computable_by_six_fixable' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_computable_by_six_fixable
+
+/--
+info: 'maj7_witness_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_witness_bracket
+
+/--
+info: 'maj7_head_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_head_bracket
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
