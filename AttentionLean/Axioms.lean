@@ -37,6 +37,7 @@ import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
 import AttentionLean.WitnessMaj7Bracket
+import AttentionLean.SoftmaxMargin
 
 -- General parity lower bound (headline)
 
@@ -491,6 +492,23 @@ info: 'maj7_witness_bracket' depends on axioms: [propext, Classical.choice, Quot
 info: 'maj7_head_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj7_head_bracket
+
+-- Softmax margin bridge: soft attention realizes decision lists at large β
+
+/--
+info: 'softmax_margin_realizes_argmax_sign' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms softmax_margin_realizes_argmax_sign
+
+/--
+info: 'softmax_margin_realizes_dl' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms softmax_margin_realizes_dl
+
+/--
+info: 'priorityDL_soft_margin_live' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms priorityDL_soft_margin_live
 
 def main : IO Unit :=
   IO.println "axiom gate passed: all checks pinned by #guard_msgs at compile time"
