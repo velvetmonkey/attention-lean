@@ -59,9 +59,12 @@
         262,144 assemblies, all fail).
     L4 (R4e) — `maj5_no_three_fixable_witnesses` via `maj5_reduction` +
         L2 + L3, then `maj5_witness_number_exact`.
-  Consequently k(maj₅) = 4 remains SEARCH-PINNED after this module; the
-  kernel-checked statements are still the bracket 3 ≤ k(maj₅) ≤ 4 and
-  the structural reduction. The bracket is untouched.
+  The open leaves above are the CATALOG route and stay future work. The
+  exact result was since closed by a DIFFERENT route: k(maj₅) = 4 is now
+  kernel-checked in `WitnessMaj5Exact.lean` (`maj5_witness_number_exact`)
+  and `WitnessMaj5HeadsExact.lean` (`maj5_head_number_exact`), both by
+  kernel `decide` with no native_decide and no sorry. So L1–L4 are an
+  alternative classification path, not a blocker on the headline theorem.
 
   Axioms: every declaration on `propext, Classical.choice, Quot.sound`
   or less. No `native_decide`.
