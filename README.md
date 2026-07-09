@@ -8,6 +8,16 @@
 
 Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences: how many attention heads it takes to compute a Boolean function, proved to the kernel.
 
+## Headline results
+
+- **A single hard-attention head is exactly a decision list** (`head_output_iff_fixable`). This hinge turns head-count lower bounds into clean combinatorial witness-count bounds.
+- **`k(maj₅) = 4`, exactly.** Majority-of-five provably needs four attention heads, strictly *above* its certificate complexity of 3 (`maj5_head_number_exact`, fully in-kernel, no exhaustive search). The first proven gap of its kind, and it refutes the tempting identity `k(T) = minCert(T)`.
+- **`k(maj₇) ∈ [5, 6]`.** Tightened from `[4, 6]` by a structural witness-killing descent, with **no enumeration over the 128-point cube** (`maj7_witness_bracket_tight`).
+- **`k(majₙ) ≥ (n+3)/2` for every odd `n ≥ 5`** (`maj_odd_ladder`). The majority gap generalises: one better than the certificate bound across the *entire* odd majority family, not just a single case.
+- **The idealisation is not a cheat.** The theory survives hard → soft: at large `β`, softmax over a decision list's score tables gives the same Boolean output (`softmax_margin_realizes_dl`).
+
+Every structural result is kernel-checked on `{propext, Classical.choice, Quot.sound}` — no `sorry`, no `native_decide`. Enumerated cases (isolated) are the only `native_decide` users and are pinned separately.
+
 ## Why `Fixable` matters (the one idea)
 
 If you read nothing else, read this. A single hard-attention head, whatever its internal dimension, does one thing: it picks a position by argmax and reads that position through a thresholded affine map. The exact class of Boolean functions a head can produce this way is captured by a single property, `Fixable`: `f` is `Fixable` when, on **any** subcube, there is some one coordinate you can pin (to some value) that makes `f` constant on the pinned slice (`Fixable` in `ParityN.lean`). Equivalently (`fixable_iff_dl`), the `Fixable` functions are exactly the **decision lists** ("if `x₃` then 1, else if `x₇` then 0, else ..."). So a single hard-attention head *is* a decision list, no more and no less (`head_output_iff_fixable`).
