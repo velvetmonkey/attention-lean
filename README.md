@@ -10,10 +10,16 @@ Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolea
 
 ## Headline results
 
+**The main theorem is general.** For *every* odd `n ≥ 5`, strict majority on `n` bits needs strictly more attention heads than its certificate complexity suggests:
+
+> **`k(majₙ) ≥ (n+3)/2`  for all odd `n ≥ 5`**  (`maj_odd_ladder`) — one above the certificate bound `⌈n/2⌉` across the entire infinite odd-majority family, machine-checked to the kernel with no enumeration.
+
+`maj₅` and `maj₇` are the first two rungs of that ladder; the rest of the library builds the machinery that makes the general bound possible:
+
 - **A single hard-attention head is exactly a decision list** (`head_output_iff_fixable`). This hinge turns head-count lower bounds into clean combinatorial witness-count bounds.
-- **`k(maj₅) = 4`, exactly.** Majority-of-five provably needs four attention heads, strictly *above* its certificate complexity of 3 (`maj5_head_number_exact`, fully in-kernel, no exhaustive search). The first proven gap of its kind, and it refutes the tempting identity `k(T) = minCert(T)`.
-- **`k(maj₇) ∈ [5, 6]`.** Tightened from `[4, 6]` by a structural witness-killing descent, with **no enumeration over the 128-point cube** (`maj7_witness_bracket_tight`).
-- **`k(majₙ) ≥ (n+3)/2` for every odd `n ≥ 5`** (`maj_odd_ladder`). The majority gap generalises: one better than the certificate bound across the *entire* odd majority family, not just a single case.
+- **`k(maj₅) = 4`, exactly** (`maj5_head_number_exact`, fully in-kernel, no exhaustive search): the first rung, and the first *proven* gap of its kind — it refutes the tempting identity `k(T) = minCert(T)`.
+- **`k(maj₇) ∈ [5, 6]`** (`maj7_witness_bracket_tight`): the second rung, tightened from `[4, 6]` by the same witness-killing descent, with **no enumeration over the 128-point cube**.
+- **The ladder itself** (`maj_odd_ladder`): the descent iterates, lifting the gap from two special cases to the whole odd family. This is the general theorem above.
 - **The idealisation is not a cheat.** The theory survives hard → soft: at large `β`, softmax over a decision list's score tables gives the same Boolean output (`softmax_margin_realizes_dl`).
 
 Every structural result is kernel-checked on `{propext, Classical.choice, Quot.sound}` — no `sorry`, no `native_decide`. Enumerated cases (isolated) are the only `native_decide` users and are pinned separately.
