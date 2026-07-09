@@ -32,11 +32,11 @@ Read top to bottom, the library is one argument that grows in generality. Each r
 
 **5. Majority is the hard case, and it breaks the easy conjecture.** Strict majority needs at least `⌈n/2⌉` fixable witnesses (`maj_needs_half_fixable_witnesses`). Exact witness numbers land for the small cases: `k(maj₃) = 2`, `k(parity_n) = n`, `k(ip2) = m`. Then the first genuine gap: `maj₅`. Its witness number is exactly **4** (`maj5_witness_number_exact`, fully in the kernel — no exhaustive search), while its certificate complexity is 3. So the tempting identity `k(T) = minCert(T)` is **false**, and `maj₅` is where it first fails.
 
-**6. The bridge back to real attention.** All of the above is stated over abstract "fixable witnesses." The bridge theorem `head_output_iff_fixable` closes the loop: a Boolean function is a hard-attention head output **iff** it is `Fixable` **iff** it is a decision list. Consequently `heads_computability_iff_fixable_witnesses` — head-count questions and witness-count questions are the same question. The abstract results become attention theorems: `maj5_requires_four_heads`, and exactly `k_heads(maj₅) = 4` (`maj5_head_number_exact`). The `maj₇` ladder is bracketed the same way: `4 ≤ k ≤ 6`, both as witnesses (`maj7_witness_bracket`) and as heads (`maj7_head_bracket`), with six explicit fixable witnesses and an aggregator that reconstruct majority on all 128 points.
+**6. The bridge back to real attention.** All of the above is stated over abstract "fixable witnesses." The bridge theorem `head_output_iff_fixable` closes the loop: a Boolean function is a hard-attention head output **iff** it is `Fixable` **iff** it is a decision list. Consequently `heads_computability_iff_fixable_witnesses` — head-count questions and witness-count questions are the same question. The abstract results become attention theorems: `maj5_requires_four_heads`, and exactly `k_heads(maj₅) = 4` (`maj5_head_number_exact`). The `maj₇` ladder is bracketed the same way: `4 ≤ k ≤ 6`, both as witnesses (`maj7_witness_bracket`) and as heads (`maj7_head_bracket`), with six explicit fixable witnesses and an aggregator that reconstruct majority on all 128 points. The bracket then **tightens to `5 ≤ k ≤ 6`** (`maj7_witness_bracket_tight`, `maj7_head_bracket_tight`) by a witness-killing descent (`maj_witness_descent`, `WitnessMaj7Lower`): a fixable witness is constant on some half-cube; pinning that half-cube plus one opposite-valued coordinate is a *balanced* double pin, under which maj₇ restricts to maj₅ and the constant witness dies — so four witnesses for maj₇ would give three for maj₅, contradicting the in-kernel `maj5_no_three_fixable_witnesses`. No enumeration over the 7-cube. The descent iterates (`maj_odd_ladder`): `k(maj_n) ≥ (n+3)/2` for every odd `n ≥ 5`, one better than the certificate bound everywhere on the odd ladder.
 
 **7. The idealisation is not a cheat: hard → soft.** Every result above is for *hard* attention (argmax). Real transformers use *softmax*. The final rung shows the theory survives the switch: at large enough inverse temperature `β`, softmax over a decision list's own score tables produces the **same Boolean output** as the hard decision list, on every input (`softmax_margin_realizes_dl`). Honest scope, stated in the module and load-bearing: this is threshold / sign agreement under a strictly positive score margin (`γ = 1`, from the integer priority scores), **not** exact equality of the soft value with the hard read — that is false at finite `β`, since softmax always puts mass everywhere. The expressivity story is about Boolean outputs, and at that level it transfers to soft attention.
 
-Net: the exact head counts now proven to the kernel are `k(parity_n) = n` lower with `2^(n-1)` upper (`k(3) = 4` exact), `k_heads(maj₃-witnesses) = 2`, `k_heads(maj₅) = 4` (strictly above its certificate complexity 3), the `maj₇` bracket `[4, 6]`, and the equivalence of hard-attention heads, fixable witnesses, and decision lists — carried across to softmax at the Boolean-output level.
+Net: the exact head counts now proven to the kernel are `k(parity_n) = n` lower with `2^(n-1)` upper (`k(3) = 4` exact), `k_heads(maj₃-witnesses) = 2`, `k_heads(maj₅) = 4` (strictly above its certificate complexity 3), the `maj₇` bracket `[5, 6]`, and the equivalence of hard-attention heads, fixable witnesses, and decision lists — carried across to softmax at the Boolean-output level.
 
 ## Notation: three head-counting quantities
 
@@ -65,6 +65,8 @@ Which theorem is about which:
 | `maj5_witness_number_exact` | `kw` (= `kh_any`) exact | `kw(maj₅) = 4` |
 | `maj5_head_number_exact` | `kh_aff` exact | `kh_aff(maj₅) = 4` |
 | `maj7_witness_bracket`, `maj7_head_bracket` | `kw` = `kh_any` bracket | `4 ≤ kh_any(maj₇) ≤ 6` — the upper end uses an arbitrary Boolean aggregator; **no `kh_aff` upper bound for `maj₇` is proven here** |
+| `maj7_witness_bracket_tight`, `maj7_head_bracket_tight` | `kw` = `kh_any` bracket | `5 ≤ kh_any(maj₇) ≤ 6` — lower end raised by the witness-killing descent (`maj_witness_descent`); exact value in {5, 6} open |
+| `maj_odd_ladder` | `kw` (= `kh_any`) lower | `kw(maj_n) ≥ (n+3)/2` for odd `n ≥ 5` (stated as: no `j+3` fixable witnesses compute maj on `2j+5` bits) |
 | `softmax_margin_realizes_dl` | none of the three (single head, positive direction only) | a softmax head at large `β` reproduces a decision list's Boolean output |
 
 ## What this library does and does not prove
@@ -80,7 +82,7 @@ Which theorem is about which:
 
 - ~~"This proves transformers need 4 heads for majority."~~ Every bound is exact **for this narrow model only**: single layer, hard attention, position-local scores, deterministic tie-break, Boolean outputs, Boolean-cube inputs. Nothing here is about trained transformers, multiple layers, real-valued value vectors, or learned parameters.
 - ~~"Soft attention has the same expressivity."~~ The softmax section is a **positive realization under a margin** (threshold agreement at the `γ = 1` integer-score margin, for large enough finite `β`) — not a soft-attention lower bound, and not equality of the soft value with the hard read (false at every finite `β`).
-- Any statement that mixes the three quantities above. Example: the `maj₇` bracket `[4, 6]` is a `kw`/`kh_any` statement; the library proves no affine-readout upper bound for `maj₇`.
+- Any statement that mixes the three quantities above. Example: the `maj₇` bracket `[5, 6]` is a `kw`/`kh_any` statement; the library proves no affine-readout upper bound for `maj₇`.
 
 ## Axiom discipline
 
@@ -136,6 +138,11 @@ The same kernel instantiates outside attention: `potential_separation_fails` sho
 | `AttentionLean.DecisionListHeads` | `head_output_iff_fixable` | **The bridge theorem**: a Boolean function is a hard-attention head output iff it is Fixable iff it is a decision list. Forward: general DL→head realization (`dl_realizable_by_head`, dimension 2 always suffices). Reverse: `headOutput_fixable`. Consequence: `heads_computability_iff_fixable_witnesses` — for arbitrary aggregators, k-head computability = k-witness computability. |
 | `AttentionLean.WitnessMaj7Bracket` | `maj7_witness_bracket` | **maj₇ witness bracket `4 ≤ k ≤ 6`**: six explicit fixable witnesses (`maj7W0..W5`, two dictators + four five-bit blocks) plus a Boolean aggregator reconstruct strict majority on 7 bits — the equality is a kernel `decide` over all 128 cube points (`maj7_eq_six_witness_combination`) — and three fixable witnesses cannot (certificate lower rung `⌈7/2⌉ = 4`, from `maj_needs_half_fixable_witnesses`). Exact `k(maj₇)` in `[4, 6]` open. |
 | `AttentionLean.WitnessMaj7Bracket` | `maj7_head_bracket` | **maj₇ head bracket `4 ≤ k ≤ 6`**: via `heads_computability_iff_fixable_witnesses`, six hard-attention heads with an arbitrary Boolean aggregator compute maj₇ and three do not. The attention face of the witness bracket. |
+| `AttentionLean.WitnessMaj7Lower` | `maj_witness_descent` | **The witness-killing descent (the smarter lemma)**: `k+1` fixable witnesses computing maj on `n+2` bits yield `k` fixable witnesses computing maj on `n` bits — the first witness's constant half-cube plus one opposite-valued pin is a balanced double pin, so majority descends and the pinned witness dies (`fixable_restrict` keeps the rest fixable). Purely structural. |
+| `AttentionLean.WitnessMaj7Lower` | `maj7_no_four_fixable_witnesses` | **k(maj₇) ≥ 5**: four fixable witnesses cannot compute strict majority on 7 bits — one descent step lands on the in-kernel `maj5_no_three_fixable_witnesses`. No enumeration over the 7-cube. |
+| `AttentionLean.WitnessMaj7Lower` | `maj7_witness_bracket_tight` | **maj₇ witness bracket, tightened: `5 ≤ k ≤ 6`**. Six fixable witnesses suffice (frozen upper half), four cannot. Exact value in {5, 6} open. |
+| `AttentionLean.WitnessMaj7Lower` | `maj7_head_bracket_tight` | **maj₇ head bracket, tightened: `5 ≤ k ≤ 6`** (arbitrary Boolean aggregator on both ends): `maj7_requires_five_heads` — no four hard-attention heads compute maj₇. |
+| `AttentionLean.WitnessMaj7Lower` | `maj_odd_ladder` | **The odd-majority ladder**: for every `j`, no `j+3` fixable witnesses compute maj on `2j+5` bits — the descent iterated from the maj₅ base. Reads off `k(maj_n) ≥ (n+3)/2` for odd `n ≥ 5`, beating the certificate bound `⌈n/2⌉` by one everywhere on the ladder. |
 | `AttentionLean.SoftmaxMargin` | `softmax_margin_realizes_dl` | **The hard → soft attention bridge**: for large enough inverse temperature `β` (`(card − 1) · exp(−β) < 1`), the thresholded *softmax* read over a decision list's own `pscore`/`pread` tables computes `P.eval` on every input — the soft-attention counterpart of the hard `priorityDL_realizable`. Backed by the abstract `softmax_margin_realizes_argmax_sign` (softmax realizes the argmax sign under a positive score margin `γ`). **Honest scope**: Boolean-output / sign agreement at finite `β` under the `γ = 1` integer-score margin, NOT exact equality of the soft value with the hard selected read (false at finite `β` — softmax always mixes). Finite `Real.exp` inequalities only; no limits, no `native_decide`. |
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
@@ -157,6 +164,7 @@ flowchart TD
     M5 --> M5H["WitnessMaj5Heads / WitnessMaj5HeadsExact<br/>kh_aff(maj₅) = 4"]
     M5H --> DL["DecisionListHeads<br/>head_output_iff_fixable — THE BRIDGE<br/>kh_any = kw"]
     DL --> M7["WitnessMaj7Bracket<br/>4 ≤ kh_any(maj₇) ≤ 6"]
+    M7 --> M7L["WitnessMaj7Lower<br/>witness-killing descent:<br/>5 ≤ kh_any(maj₇) ≤ 6 + odd ladder"]
     DL --> SM["SoftmaxMargin<br/>hard → soft, Boolean-output level"]
 ```
 
@@ -189,6 +197,7 @@ AttentionLean/
 ├── WitnessMaj5HeadsExact.lean: four heads suffice — k_heads(maj₅) = 4 exact
 ├── DecisionListHeads.lean: bridge theorem — Fixable = decision lists = head outputs
 ├── WitnessMaj7Bracket.lean: maj₇ bracket 4 ≤ k ≤ 6 (witness and head forms)
+├── WitnessMaj7Lower.lean: witness-killing descent — maj₇ bracket tightened to [5, 6] + odd ladder
 ├── SoftmaxMargin.lean: hard → soft bridge — softmax realizes decision lists at large β
 ├── Axioms.lean:        the build-gated axiom transcript (clean-tier theorems, #guard_msgs pinned)
 ├── AxiomsDirty.lean:   pinned footprints for the native_decide (enumerated) lower bounds
@@ -232,7 +241,7 @@ MIT. See [LICENSE](LICENSE). Copyright (c) 2026 Ben Cassie.
 
 `head_output_iff_fixable` (`DecisionListHeads.lean`) closes the characterization of single-head expressivity: a Boolean function on n bits is the output of some hard-attention head **iff** it is `Fixable` **iff** (by `fixable_iff_dl`) it is a decision list. Consequently (`heads_computability_iff_fixable_witnesses`), for arbitrary aggregators, computability by k heads coincides with computability by k `Fixable` witnesses: every witness-number upper bound transfers to heads (dimension 2 suffices), and every head-count lower bound is provable in witness space. Caveat: with a thresholded affine readout on the head side, upper bounds transfer only when the witness-side aggregator is itself threshold-affine.
 
-The softmax bridge (`SoftmaxMargin.lean`) extends the *positive* direction past hard attention: the same decision-list score tables that an argmax head realizes are also realized, at the Boolean-output level, by a softmax head at large `β`. So the exact head counts proved here — `parity_n = n` lower with `2^(n-1)` upper, `maj₃-witnesses = 2`, `maj₅ heads = witnesses = 4` (strictly above certificate complexity 3), and the `maj₇` bracket `[4, 6]` — describe the expressivity of the decision-list class that both hard and soft attention compute.
+The softmax bridge (`SoftmaxMargin.lean`) extends the *positive* direction past hard attention: the same decision-list score tables that an argmax head realizes are also realized, at the Boolean-output level, by a softmax head at large `β`. So the exact head counts proved here — `parity_n = n` lower with `2^(n-1)` upper, `maj₃-witnesses = 2`, `maj₅ heads = witnesses = 4` (strictly above certificate complexity 3), and the `maj₇` bracket `[5, 6]` — describe the expressivity of the decision-list class that both hard and soft attention compute.
 
 ---
 
