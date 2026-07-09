@@ -6,6 +6,15 @@
   Phase 3: Parity-on-4-bits requires 4 heads (imported from Aristotle proof run).
   Phase 4: General parity lower bound — fewer than n heads cannot compute
            parity on n bits, structurally (no native_decide).
+  Phase 5: Witness-separation theory — a general collision/refinement method
+           for fixable-witness (and hence head-count) lower bounds.
+  Phase 6: Majority — exact k(maj₅) = 4 (witness and head forms), strictly
+           above its certificate complexity 3; maj₇ bracketed at [4, 6].
+  Phase 7: The bridge theorem — a hard-attention head output iff `Fixable`
+           iff a decision list (`head_output_iff_fixable`), so head-count and
+           witness-count questions coincide.
+  Phase 8: Softmax bridge — the decision-list score tables realized by a
+           softmax head at large β, at the Boolean-output level.
 -/
 import AttentionLean.Defs
 import AttentionLean.Compute

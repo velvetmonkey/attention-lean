@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Cache .lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+
+      - name: Fetch Mathlib build cache
+        run: lake exe cache get || true
+
+      - name: Build (axiom_check runs via defaultTargets)
+        run: lake build
+
+      - name: Axiom footprint gate
+        run: lake exe axiom_check
+
+      - name: No sorry in the library
+        # Comment-aware: docstrings here legitimately say "no sorry" / "no
+        # `sorry`" (and English "admit"), so a bare grep false-fails on a
+        # clean repo. The script strips Lean comments first, then greps.
+        # axiom_check above already gates real drift (sorryAx in pinned decls).
+        run: python3 scripts/check_no_sorry.py

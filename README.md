@@ -38,6 +38,50 @@ Read top to bottom, the library is one argument that grows in generality. Each r
 
 Net: the exact head counts now proven to the kernel are `k(parity_n) = n` lower with `2^(n-1)` upper (`k(3) = 4` exact), `k_heads(maj₃-witnesses) = 2`, `k_heads(maj₅) = 4` (strictly above its certificate complexity 3), the `maj₇` bracket `[4, 6]`, and the equivalence of hard-attention heads, fixable witnesses, and decision lists — carried across to softmax at the Boolean-output level.
 
+## Notation: three head-counting quantities
+
+The library proves bounds on three related but distinct quantities, and keeping them apart is load-bearing. Every theorem in this README is about one of these:
+
+| Symbol | Quantity | Combining rule |
+|---|---|---|
+| `kw(T)` | **Fixable-witness number** — least `k` such that some `k` `Fixable` witnesses and some aggregator compute `T` | arbitrary Boolean aggregator `agg : (Fin k → Bool) → Bool` |
+| `kh_any(T)` | **Head number, arbitrary readout** — least `k` such that some `k` hard-attention heads and some Boolean aggregator over their outputs compute `T` | arbitrary Boolean aggregator |
+| `kh_aff(T)` | **Head number, affine readout** — least `k` such that some `k` hard-attention heads through a thresholded affine readout (`∑ wᵢ·vᵢ + bias > 0`) compute `T` | thresholded affine only |
+
+Relations:
+
+- `kh_any(T) = kw(T)` for every `T` (`heads_computability_iff_fixable_witnesses`, via the bridge theorem `head_output_iff_fixable`).
+- `kh_any(T) ≤ kh_aff(T)` — an affine readout is one particular aggregator. So arbitrary-aggregator **lower** bounds are the strong ones, and affine-readout **upper** bounds are the strong ones.
+- Transfer caveat: a `kw` upper bound yields a `kh_aff` upper bound only when the witness-side aggregator is itself threshold-affine (see the Appendix).
+
+Which theorem is about which:
+
+| Theorem | Quantity | Statement |
+|---|---|---|
+| `parityN_requires_N_heads` | `kh_aff` lower | `n ≤ kh_aff(parity_n)` |
+| `parityN_requires_N_heads_of_witness_theory` | `kw` (= `kh_any`) lower | `n ≤ kw(parity_n)` — any aggregator, strictly stronger |
+| `parityN_achievable_with_exp_heads` | `kh_aff` upper | `kh_aff(parity_n) ≤ 2^(n-1)` |
+| `parity3_head_complexity_four` | `kh_aff` exact | `kh_aff(parity₃) = 4` |
+| `maj5_witness_number_exact` | `kw` (= `kh_any`) exact | `kw(maj₅) = 4` |
+| `maj5_head_number_exact` | `kh_aff` exact | `kh_aff(maj₅) = 4` |
+| `maj7_witness_bracket`, `maj7_head_bracket` | `kw` = `kh_any` bracket | `4 ≤ kh_any(maj₇) ≤ 6` — the upper end uses an arbitrary Boolean aggregator; **no `kh_aff` upper bound for `maj₇` is proven here** |
+| `softmax_margin_realizes_dl` | none of the three (single head, positive direction only) | a softmax head at large `β` reproduces a decision list's Boolean output |
+
+## What this library does and does not prove
+
+**Safe to claim** (each machine-checked, in the model formalized here):
+
+- In a **single layer of hard (argmax) attention with position-local scores, deterministic smallest-index tie-breaking, and Boolean per-head outputs** over the Boolean cube: computing parity on `n` bits requires at least `n` heads, `2^(n-1)` heads suffice, and at `n = 3` the exact count is 4.
+- The fixable-witness number of `maj₅` is exactly 4 while its certificate complexity is 3 — the first formal separation of the two.
+- Single-head expressivity in this model is **exactly** the decision-list class (`head_output_iff_fixable`).
+- At large inverse temperature `β`, a softmax head over a decision list's own score tables produces the same Boolean output as the hard head (`softmax_margin_realizes_dl`).
+
+**Not claimed, and not implied — do not say:**
+
+- ~~"This proves transformers need 4 heads for majority."~~ Every bound is exact **for this narrow model only**: single layer, hard attention, position-local scores, deterministic tie-break, Boolean outputs, Boolean-cube inputs. Nothing here is about trained transformers, multiple layers, real-valued value vectors, or learned parameters.
+- ~~"Soft attention has the same expressivity."~~ The softmax section is a **positive realization under a margin** (threshold agreement at the `γ = 1` integer-score margin, for large enough finite `β`) — not a soft-attention lower bound, and not equality of the soft value with the hard read (false at every finite `β`).
+- Any statement that mixes the three quantities above. Example: the `maj₇` bracket `[4, 6]` is a `kw`/`kh_any` statement; the library proves no affine-readout upper bound for `maj₇`.
+
 ## Axiom discipline
 
 The general parity lower bound `parityN_requires_N_heads` (with `collision_exists_n` and the `parityN` compatibility lemmas), the windowed lower bound (`ParityWindow`), the general achievability upper bound (`ParityAchieve`), the whole witness-theory tower, the `maj₅`/`maj₇` results, the bridge theorem, and the softmax bridge are all proved using only the standard axioms `propext`, `Classical.choice`, `Quot.sound`, with no `native_decide`. Every headline theorem's axiom footprint is pinned by `#guard_msgs` in `AttentionLean/Axioms.lean`, and the `axiom_check` target is in the lake `defaultTargets`, so any axiom drift fails a bare `lake build`. The only exceptions, isolated by design, are the enumerated fixed-width lower bounds (the `Parity4*` modules and some `Compute` lemmas), which use `native_decide` and therefore additionally carry `Lean.ofReduceBool`; those are pinned separately in `AttentionLean/AxiomsDirty.lean`.
@@ -96,6 +140,28 @@ The same kernel instantiates outside attention: `potential_separation_fails` sho
 | `AttentionLean.Parity4Main` | `parity4_requires_four_heads` | Enumerated `n = 4` case: no 3 heads compute parity on 4 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 | `AttentionLean.ParitySmall` | `parity3_requires_three_heads` | Enumerated `n = 3` case: no 2 heads compute parity on 3 bits. Proved by `native_decide`, so it additionally carries `Lean.ofReduceBool`. |
 
+## Dependency graph
+
+How the results feed each other (arrows = "is used by"; module imports follow the same order):
+
+```mermaid
+flowchart TD
+    D["Defs / Compute<br/>HardAttentionHead, headOutput"] --> PN["ParityN<br/>Fixable, headOutput_fixable,<br/>parityN_requires_N_heads"]
+    PN --> PW["ParityWindow<br/>windowed lower bound"]
+    PN --> PA["ParityAchieve<br/>2^(n-1) upper bound"]
+    PA --> P3["Parity3Clean<br/>k(3) = 4 exact"]
+    PA --> WS["WitnessSeparation<br/>collision ⇒ non-computation"]
+    WS --> WT["WitnessTheory<br/>refinement characterization,<br/>fixable_witnesses_lower_bound"]
+    WT --> WM["WitnessEmbedding / WitnessMajority / WitnessTightness<br/>ip2, maj ≥ ⌈n/2⌉, exact small cases"]
+    WM --> M5["WitnessMaj5 → … → WitnessMaj5Exact<br/>kw(maj₅) = 4 in-kernel<br/>(via FixableNormalForm: Fixable = decision lists,<br/>+ ThresholdCatalog)"]
+    M5 --> M5H["WitnessMaj5Heads / WitnessMaj5HeadsExact<br/>kh_aff(maj₅) = 4"]
+    M5H --> DL["DecisionListHeads<br/>head_output_iff_fixable — THE BRIDGE<br/>kh_any = kw"]
+    DL --> M7["WitnessMaj7Bracket<br/>4 ≤ kh_any(maj₇) ≤ 6"]
+    DL --> SM["SoftmaxMargin<br/>hard → soft, Boolean-output level"]
+```
+
+(The concrete import chain is currently linear through the `maj₅` modules — in particular `DecisionListHeads` sits downstream of `WitnessMaj5HeadsExact`, even though the bridge theorem is logically more general. A possible future refactor extracts the generic decision-list head realization below the `maj₅` construction; it would change imports only, no statements.)
+
 ## Module structure
 
 ```text
@@ -142,10 +208,11 @@ A bare `lake build` also runs the `axiom_check` target, so any axiom drift (a `s
 ## Verification
 
 ```bash
-rg "sorry|admit" AttentionLean/
+lake exe axiom_check                # pinned axiom footprint of every headline theorem
+python3 scripts/check_no_sorry.py   # no `sorry` outside comments (comment-aware)
 ```
 
-This command returns nothing but prose in the checked source tree — no proof uses `sorry` or `admit`.
+No proof uses `sorry` or `admit`. (A bare `rg "sorry|admit"` shows only prose hits in docstrings — "no sorry", "admit a restriction" — which is why the guard strips Lean comments before matching; it runs in CI.) See [REPRODUCING.md](REPRODUCING.md) for the full build-and-verify walkthrough with expected outputs and timings.
 
 ## Independent cross-checks (exhaustive search)
 

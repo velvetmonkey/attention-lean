@@ -1,4 +1,4 @@
-name = "RequestProject"
+name = "AttentionLean"
 defaultTargets = ["AttentionLean", "axiom_check"]
 
 [[require]]
