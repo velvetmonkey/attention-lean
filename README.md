@@ -166,3 +166,7 @@ MIT. See [LICENSE](LICENSE). Copyright (c) 2026 Ben Cassie.
 `head_output_iff_fixable` (`DecisionListHeads.lean`) closes the characterization of single-head expressivity: a Boolean function on n bits is the output of some hard-attention head **iff** it is `Fixable` **iff** (by `fixable_iff_dl`) it is a decision list. Consequently (`heads_computability_iff_fixable_witnesses`), for arbitrary aggregators, computability by k heads coincides with computability by k `Fixable` witnesses: every witness-number upper bound transfers to heads (dimension 2 suffices), and every head-count lower bound is provable in witness space. Caveat: with a thresholded affine readout on the head side, upper bounds transfer only when the witness-side aggregator is itself threshold-affine.
 
 The softmax bridge (`SoftmaxMargin.lean`) extends the *positive* direction past hard attention: the same decision-list score tables that an argmax head realizes are also realized, at the Boolean-output level, by a softmax head at large `β`. So the exact head counts proved here — `parity_n = n` lower with `2^(n-1)` upper, `maj₃-witnesses = 2`, `maj₅ heads = witnesses = 4` (strictly above certificate complexity 3), and the `maj₇` bracket `[4, 6]` — describe the expressivity of the decision-list class that both hard and soft attention compute.
+
+---
+
+Part of the [velvetmonkey Lean 4 proof corpus](https://velvetmonkey.github.io/lean/).
