@@ -10,6 +10,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Source-of-truth gate: full library build + axiom footprint + no-sorry.
+  # The per-module matrix below is for fast failure localisation and parallel
+  # wall-clock only; THIS job remains authoritative for "everything is green".
+  # Caveat: each matrix job re-fetches the Mathlib cache and rebuilds its
+  # module's local dependency subtree, so the split costs extra runner minutes
+  # (Mathlib itself comes from cache; only the small local lib recompiles).
   build:
     runs-on: ubuntu-latest
     steps:
@@ -41,3 +47,50 @@ jobs:
         # clean repo. The script strips Lean comments first, then greps.
         # axiom_check above already gates real drift (sorryAx in pinned decls).
         run: python3 scripts/check_no_sorry.py
+
+  # Enumerate the library modules into a JSON matrix. Auto-tracks new files, so
+  # adding a module to AttentionLean/ joins the matrix with no workflow edit.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.list.outputs.modules }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List AttentionLean modules
+        id: list
+        run: |
+          mods=$(ls AttentionLean/*.lean \
+            | sed 's#AttentionLean/##; s#\.lean$##; s#^#AttentionLean.#' \
+            | jq -R . | jq -cs .)
+          echo "modules=$mods" >> "$GITHUB_OUTPUT"
+
+  # One build per module — fast failure localisation. fail-fast: false so a
+  # single broken module does not mask the others.
+  build-module:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJson(needs.discover.outputs.modules) }}
+    name: build ${{ matrix.module }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Cache .lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+
+      - name: Fetch Mathlib build cache
+        run: lake exe cache get || true
+
+      - name: Build ${{ matrix.module }}
+        run: lake build ${{ matrix.module }}
