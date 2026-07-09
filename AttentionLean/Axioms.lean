@@ -37,6 +37,7 @@ import AttentionLean.WitnessMaj5Heads
 import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
 import AttentionLean.WitnessMaj7Bracket
+import AttentionLean.WitnessMaj7Lower
 import AttentionLean.SoftmaxMargin
 
 -- General parity lower bound (headline)
@@ -492,6 +493,38 @@ info: 'maj7_witness_bracket' depends on axioms: [propext, Classical.choice, Quot
 info: 'maj7_head_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj7_head_bracket
+
+-- Witness maj7 tightened: descent lemma, 5 ≤ k(maj7) ≤ 6, and the odd ladder
+
+/--
+info: 'maj_witness_descent' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_witness_descent
+
+/--
+info: 'maj7_no_four_fixable_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_no_four_fixable_witnesses
+
+/--
+info: 'maj7_witness_bracket_tight' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_witness_bracket_tight
+
+/--
+info: 'maj7_requires_five_heads' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_requires_five_heads
+
+/--
+info: 'maj7_head_bracket_tight' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_head_bracket_tight
+
+/--
+info: 'maj_odd_ladder' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_odd_ladder
 
 -- Softmax margin bridge: soft attention realizes decision lists at large β
 
