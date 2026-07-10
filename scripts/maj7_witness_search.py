@@ -49,12 +49,14 @@ dimension up):
             EXHAUSTIVELY ENUMERATED, |C3| = 543,528.
        C4 = all (T3of6, 4) solutions (K3 shape), built from C3 by fiber
             lifting + anchor completion + GLOBAL 64-point verification:
-            EXHAUSTIVELY COUNTABLE (--stage c4count, hours), tens of
-            millions of tuples.
+            EXHAUSTIVELY ENUMERATED via --stage c4count,
+            |C4| = 51,812,352 exactly (559,447,512 lift combos,
+            106 min at 7 workers).
        top = all 5-tuples from C4 by one more fiber lift + completion +
-            GLOBAL 128-point verification: measured at ~3.4e4 completions
-            per C4 tuple, ~5e12 in total — OUT OF REACH for this
-            architecture (months of CPU).  NOT RUN in full.
+            GLOBAL 128-point verification: measured at ~3.41e4
+            completions per C4 tuple (~0.5 ms each), ~1.8e12 in total
+            ~ 29 CPU-years — OUT OF REACH for this architecture.
+            NOT RUN in full.
      VERDICT: INCOMPLETE.  The script never claims a refutation it did
      not compute.  What IS decided (script-level, exhaustively): no
      5-witness solution exists outside the collapsed configuration
