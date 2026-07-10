@@ -64,4 +64,4 @@ case3 matched bad triples: sigma=1: 0  sigma=0: 0
 
 ## Archived version
 
-Zenodo: version DOI [10.5281/zenodo.21188381](https://doi.org/10.5281/zenodo.21188381) (concept DOI [10.5281/zenodo.21188380](https://doi.org/10.5281/zenodo.21188380)). The archived deposit corresponds to commit `e2334f1`. The paper source is `paper.md`; build the PDF with `bash build-pdf.sh` (pandoc + tectonic + JuliaMono).
+Zenodo: version DOI [10.5281/zenodo.21298767](https://doi.org/10.5281/zenodo.21298767) (v5, the hard-and-soft re-headline; concept DOI [10.5281/zenodo.21188380](https://doi.org/10.5281/zenodo.21188380) always resolves to the latest). The archived deposit corresponds to commit `f8dc423`. The paper source is `paper.md`; build the PDF with `bash build-pdf.sh` (pandoc + tectonic + JuliaMono).
