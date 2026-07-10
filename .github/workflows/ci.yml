@@ -9,13 +9,21 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Producer/consumer cache for the LOCAL library only (.lake/build, a few MB).
+# Mathlib is deliberately NOT cached here: the full .lake is ~8 GB, which
+# would thrash GitHub's 10 GB per-repo cache cap once the key rotates on
+# source changes. Every job fetches Mathlib oleans via `lake exe cache get`
+# instead (Mathlib's own CDN, fast).
+# The cache key (inlined in both jobs below — hashFiles/runner contexts are
+# not available in workflow-level env) includes a source-content hash so it
+# rotates when the library changes; restore-keys falls back to the newest
+# build for the same toolchain+manifest so only the delta recompiles.
+
 jobs:
   # Source-of-truth gate: full library build + axiom footprint + no-sorry.
-  # The per-module matrix below is for fast failure localisation and parallel
-  # wall-clock only; THIS job remains authoritative for "everything is green".
-  # Caveat: each matrix job re-fetches the Mathlib cache and rebuilds its
-  # module's local dependency subtree, so the split costs extra runner minutes
-  # (Mathlib itself comes from cache; only the small local lib recompiles).
+  # Also the cache PRODUCER: on success its populated .lake/build is saved,
+  # and the per-module matrix below restores it so each matrix job compiles
+  # only its own module delta instead of the full local dependency subtree.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -26,11 +34,13 @@ jobs:
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Cache .lake
+      - name: Cache local lib build (producer)
         uses: actions/cache@v4
         with:
-          path: .lake
-          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+          path: .lake/build
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}
+          restore-keys: |
+            lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-
 
       - name: Fetch Mathlib build cache
         run: lake exe cache get || true
@@ -67,8 +77,16 @@ jobs:
 
   # One build per module — fast failure localisation. fail-fast: false so a
   # single broken module does not mask the others.
+  # Cache CONSUMER: waits for the build gate (needs: build) and restores its
+  # saved .lake/build, so each job compiles only its own module delta. This
+  # serializes the matrix behind the full build — wall-clock goes up, but
+  # billable runner minutes drop sharply (no 43-way redundant subtree rebuild).
+  # The !cancelled() guard keeps the matrix running when the build gate is
+  # RED — the exact case where per-module localisation is the point — via the
+  # restore-keys fallback to the last green build.
   build-module:
-    needs: discover
+    needs: [discover, build]
+    if: ${{ !cancelled() && needs.discover.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -83,11 +101,13 @@ jobs:
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Cache .lake
-        uses: actions/cache@v4
+      - name: Restore local lib build (consumer)
+        uses: actions/cache/restore@v4
         with:
-          path: .lake
-          key: lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}
+          path: .lake/build
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}
+          restore-keys: |
+            lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-
 
       - name: Fetch Mathlib build cache
         run: lake exe cache get || true
