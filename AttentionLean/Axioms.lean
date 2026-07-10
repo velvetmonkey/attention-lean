@@ -38,6 +38,7 @@ import AttentionLean.WitnessMaj5HeadsExact
 import AttentionLean.DecisionListHeads
 import AttentionLean.WitnessMaj7Bracket
 import AttentionLean.WitnessMaj7Lower
+import AttentionLean.WitnessMaj7SignPurity
 import AttentionLean.SoftmaxMargin
 
 -- General parity lower bound (headline)
@@ -525,6 +526,34 @@ info: 'maj7_head_bracket_tight' depends on axioms: [propext, Classical.choice, Q
 info: 'maj_odd_ladder' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms maj_odd_ladder
+
+-- maj7 sign purity: the pair descent and the mixed-sign kills (five-witness
+-- computations of maj7 have all constancy half-cubes of one sign)
+
+/--
+info: 'maj_witness_descent_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj_witness_descent_pair
+
+/--
+info: 'maj7_no_mixed_sign_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_no_mixed_sign_pair
+
+/--
+info: 'maj7_no_shared_face_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_no_shared_face_pair
+
+/--
+info: 'maj7_no_opposite_pair_same_direction' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_no_opposite_pair_same_direction
+
+/--
+info: 'maj7_five_witness_sign_purity' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms maj7_five_witness_sign_purity
 
 -- Softmax margin bridge: soft attention realizes decision lists at large β
 
