@@ -9,23 +9,37 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# Producer/consumer cache for the LOCAL library only (.lake/build, a few MB).
+# Producer/consumer cache for the LOCAL library only (.lake/build, ~660 MB).
 # Mathlib is deliberately NOT cached here: the full .lake is ~8 GB, which
 # would thrash GitHub's 10 GB per-repo cache cap once the key rotates on
 # source changes. Every job fetches Mathlib oleans via `lake exe cache get`
 # instead (Mathlib's own CDN, fast).
-# The cache key (inlined in both jobs below — hashFiles/runner contexts are
-# not available in workflow-level env) includes a source-content hash so it
-# rotates when the library changes; restore-keys falls back to the newest
-# build for the same toolchain+manifest so only the delta recompiles.
+#
+# Bootstrap problem this layout solves: a cold full build of this library
+# exceeds the 6 h job limit on hosted runners, and a job killed at the limit
+# is CANCELLED, which skips post steps — so the plain actions/cache post-step
+# save never ran and the cache never seeded (every historical run was cold).
+# Three mechanisms fix that:
+#   1. The build job's cache key ends in the unique run id, and the save step
+#      runs with `if: always()` — so even a FAILED build persists its partial
+#      .lake/build, and the next run resumes from it via restore-keys
+#      (incremental convergence instead of Sisyphus).
+#   2. `timeout-minutes` is set below the 6 h kill so a too-slow build FAILS
+#      (post/save steps still run) rather than being cancelled (they don't).
+#   3. On a total cache miss the job downloads a one-time seed tarball from
+#      the `ci-cache-seed` prerelease (built locally at the same toolchain/
+#      platform). Best-effort: if the release is gone, the job just builds
+#      cold and converges via (1). The release can be deleted once both this
+#      branch and main have saved caches (PR caches are not visible to main).
 
 jobs:
   # Source-of-truth gate: full library build + axiom footprint + no-sorry.
-  # Also the cache PRODUCER: on success its populated .lake/build is saved,
-  # and the per-module matrix below restores it so each matrix job compiles
-  # only its own module delta instead of the full local dependency subtree.
+  # Also the cache PRODUCER: its populated .lake/build is saved (even on
+  # failure), and the per-module matrix below restores it so each matrix job
+  # compiles only its own module delta instead of the full dependency subtree.
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
 
@@ -34,13 +48,23 @@ jobs:
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Cache local lib build (producer)
-        uses: actions/cache@v4
+      - name: Restore local lib build
+        id: restore
+        uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}-${{ github.run_id }}
           restore-keys: |
+            lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}-
             lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-
+
+      - name: Seed local lib build (total cache miss only, best-effort)
+        if: steps.restore.outputs.cache-matched-key == ''
+        run: |
+          curl -fsSL -o /tmp/lake-build-seed.tar.zst \
+            https://github.com/${{ github.repository }}/releases/download/ci-cache-seed/lake-build-seed.tar.zst \
+            && tar --zstd -xf /tmp/lake-build-seed.tar.zst \
+            || echo "no seed available; building cold (will converge via partial-cache saves)"
 
       - name: Fetch Mathlib build cache
         run: lake exe cache get || true
@@ -57,6 +81,13 @@ jobs:
         # clean repo. The script strips Lean comments first, then greps.
         # axiom_check above already gates real drift (sorryAx in pinned decls).
         run: python3 scripts/check_no_sorry.py
+
+      - name: Save local lib build (even on failure — partial progress counts)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: ${{ steps.restore.outputs.cache-primary-key }}
 
   # Enumerate the library modules into a JSON matrix. Auto-tracks new files, so
   # adding a module to AttentionLean/ joins the matrix with no workflow edit.
@@ -77,17 +108,19 @@ jobs:
 
   # One build per module — fast failure localisation. fail-fast: false so a
   # single broken module does not mask the others.
-  # Cache CONSUMER: waits for the build gate (needs: build) and restores its
-  # saved .lake/build, so each job compiles only its own module delta. This
-  # serializes the matrix behind the full build — wall-clock goes up, but
-  # billable runner minutes drop sharply (no 43-way redundant subtree rebuild).
+  # Cache CONSUMER: waits for the build gate (needs: build) and restores the
+  # .lake/build it saved this run (exact run-id key), so each job compiles
+  # only its own module delta. This serializes the matrix behind the full
+  # build — wall-clock goes up, but total runner minutes drop sharply (no
+  # 43-way redundant subtree rebuild).
   # The !cancelled() guard keeps the matrix running when the build gate is
-  # RED — the exact case where per-module localisation is the point — via the
-  # restore-keys fallback to the last green build.
+  # RED — the exact case where per-module localisation is the point — using
+  # the gate's partial save (or an older cache) via restore-keys.
   build-module:
     needs: [discover, build]
     if: ${{ !cancelled() && needs.discover.result == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 340
     strategy:
       fail-fast: false
       matrix:
@@ -102,12 +135,22 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Restore local lib build (consumer)
+        id: restore
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}
+          key: lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}-${{ github.run_id }}
           restore-keys: |
+            lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-${{ hashFiles('AttentionLean/**/*.lean', 'lakefile.toml') }}-
             lake-build-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'lean-toolchain') }}-
+
+      - name: Seed local lib build (total cache miss only, best-effort)
+        if: steps.restore.outputs.cache-matched-key == ''
+        run: |
+          curl -fsSL -o /tmp/lake-build-seed.tar.zst \
+            https://github.com/${{ github.repository }}/releases/download/ci-cache-seed/lake-build-seed.tar.zst \
+            && tar --zstd -xf /tmp/lake-build-seed.tar.zst \
+            || echo "no seed available; building cold"
 
       - name: Fetch Mathlib build cache
         run: lake exe cache get || true
