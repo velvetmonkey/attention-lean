@@ -1,5 +1,6 @@
 # attention-lean
 
+[![CI](https://github.com/velvetmonkey/attention-lean/actions/workflows/ci.yml/badge.svg)](https://github.com/velvetmonkey/attention-lean/actions/workflows/ci.yml)
 [![Lean 4](https://img.shields.io/badge/Lean-4.28.0-blue)](https://lean-lang.org/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-v4.28.0-purple)](https://github.com/leanprover-community/mathlib4)
 [![Proofs](https://img.shields.io/badge/proofs-proven%20%2F%200%20sorry-brightgreen)](AttentionLean)
