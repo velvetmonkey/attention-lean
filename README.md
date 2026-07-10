@@ -7,7 +7,7 @@
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21188380-blue)](https://doi.org/10.5281/zenodo.21188380)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Lean 4 / Mathlib formalisation of hard attention expressivity over finite Boolean sequences: how many attention heads it takes to compute a Boolean function, proved to the kernel.
+Lean 4 / Mathlib formalisation of hard and soft attention expressivity over finite Boolean cubes: how many attention heads it takes to compute a Boolean function, proved to the kernel, and how the hard (argmax) bounds survive the switch to soft (softmax) attention at the Boolean-output level.
 
 ## Headline results
 
