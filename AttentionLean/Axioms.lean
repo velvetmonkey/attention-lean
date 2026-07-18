@@ -25,6 +25,7 @@ import AttentionLean.ParityAchieve
 import AttentionLean.Parity3Clean
 import AttentionLean.WitnessSeparation
 import AttentionLean.WitnessTheory
+import AttentionLean.Adequacy
 import AttentionLean.WitnessEmbedding
 import AttentionLean.WitnessMajority
 import AttentionLean.WitnessTightness
@@ -126,6 +127,9 @@ info: 'rank_potentials_cannot_see_flag' depends on axioms: [propext, Classical.c
 info: 'witness_computable_iff_refines' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms witness_computable_iff_refines
+#print axioms AttentionLean.Adequacy.check_sound
+#print axioms AttentionLean.Adequacy.check_implies_finite_witness_computable
+#print axioms AttentionLean.Adequacy.collision_refutes_aggregator
 
 /--
 info: 'witness_separation_fails_of_char' depends on axioms: [propext, Classical.choice, Quot.sound]

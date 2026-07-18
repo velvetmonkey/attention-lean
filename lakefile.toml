@@ -13,3 +13,7 @@ globs = ["AttentionLean.+"]
 [[lean_exe]]
 name = "axiom_check"
 root = "AttentionLean.Axioms"
+
+[[lean_exe]]
+name = "adequacy_oracle"
+root = "AttentionLean.AdequacyOracle"
