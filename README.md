@@ -1,5 +1,6 @@
 # attention-lean
 
+[![thread](https://img.shields.io/badge/%F0%9F%A7%B5-how%20it%20works-1DA1F2)](https://x.com/thevelvetmonke)
 [![CI](https://github.com/velvetmonkey/attention-lean/actions/workflows/ci.yml/badge.svg)](https://github.com/velvetmonkey/attention-lean/actions/workflows/ci.yml)
 [![Lean 4](https://img.shields.io/badge/Lean-4.28.0-blue)](https://lean-lang.org/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-v4.28.0-purple)](https://github.com/leanprover-community/mathlib4)
@@ -8,6 +9,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Lean 4 / Mathlib formalisation of hard and soft attention expressivity over finite Boolean cubes: how many attention heads it takes to compute a Boolean function, proved to the kernel, and how the hard (argmax) bounds survive the switch to soft (softmax) attention at the Boolean-output level.
+
+## What this is, and why it matters
+
+This library asks a precise expressivity question: how many simple attention heads are needed to compute Boolean functions? Its headline theorem, `maj_odd_ladder`, proves that for every odd input width `n >= 5`, strict majority needs at least `(n+3)/2` fixable witnesses. Through the library's proved characterization of a hard-attention head as a decision list, this is also a head-count lower bound with an arbitrary Boolean readout.
+
+The result matters because the obvious certificate-complexity estimate is not tight. A structural descent removes one witness whenever two balanced coordinates are pinned, reducing the general case to the machine-checked five-bit base case. The argument avoids enumeration over each larger Boolean cube.
+
+The scope is deliberately narrow. The model is one layer of hard attention with position-local scores, deterministic smallest-index tie-breaking, Boolean inputs, and Boolean head outputs. This does not establish a lower bound for trained transformers, multilayer networks, or soft attention. The separate softmax result is only a positive Boolean-output realization under a margin, not a matching lower bound or exact equality of soft and hard values.
 
 ## Headline results
 
