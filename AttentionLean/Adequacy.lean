@@ -100,15 +100,15 @@ def collisionPairs (samples : List (Sample (List String) String)) : List (String
       then some (left.1.id, right.1.id)
       else none
 
-private def runFile (path : String) : IO UInt32 := do
+private def runFile (path : String) (allowVacuous : Bool) : IO UInt32 := do
   let text ← IO.FS.readFile path
   let parsed ← match Json.parse text >>= parseDocument with
     | .ok parsed => pure parsed
     | .error error =>
-        IO.println s!"seal adequacy check  {path}"
+        IO.println s!"adequacy check  {path}"
         IO.println s!"  FAIL malformed input: {error}"
         return 1
-  IO.println s!"seal adequacy check  {path}"
+  IO.println s!"adequacy check  {path}"
   IO.println s!"  states: {parsed.samples.length}   monitors: {parsed.monitors.length}"
   let collisions := collisionPairs parsed.samples
   if !collisions.isEmpty then
@@ -119,7 +119,7 @@ private def runFile (path : String) : IO UInt32 := do
   let labels := parsed.samples.map (·.label) |>.eraseDups
   if labels.length ≤ 1 then
     IO.println "  WARN VACUOUS over observed finite sample"
-    return 0
+    return if allowVacuous then 0 else 3
   if check parsed.samples then
     IO.println "  PASS ADEQUATE over observed finite sample"
     IO.println "  theorem: check_implies_finite_witness_computable"
@@ -129,9 +129,10 @@ private def runFile (path : String) : IO UInt32 := do
 
 def runMain (args : List String) : IO UInt32 := do
   match args with
-  | [path] => runFile path
+  | [path] => runFile path false
+  | ["--allow-vacuous", path] => runFile path true
   | _ =>
-      IO.eprintln "usage: adequacy_oracle <labels.json>"
+      IO.eprintln "usage: adequacy_oracle [--allow-vacuous] <labels.json>"
       return 2
 
 end AttentionLean.Adequacy

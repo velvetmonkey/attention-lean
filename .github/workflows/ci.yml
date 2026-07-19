@@ -72,6 +72,9 @@ jobs:
       - name: Build (axiom_check runs via defaultTargets)
         run: lake build
 
+      - name: Adequacy CLI regression tests
+        run: lake test
+
       - name: Axiom footprint gate
         run: lake exe axiom_check
 
