@@ -1,5 +1,6 @@
 name = "AttentionLean"
 defaultTargets = ["AttentionLean", "axiom_check"]
+testDriver = "adequacy_cli_test"
 
 [[require]]
 name = "mathlib"
@@ -17,3 +18,7 @@ root = "AttentionLean.Axioms"
 [[lean_exe]]
 name = "adequacy_oracle"
 root = "AttentionLean.AdequacyOracle"
+
+[[lean_exe]]
+name = "adequacy_cli_test"
+root = "Test.AdequacyCli"
