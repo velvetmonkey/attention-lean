@@ -1,6 +1,7 @@
 /.lake/
 /build/
 /.DS_Store
+/.frisk-maj5-s2*.log
 
 # Local outreach drafts — not for the public repo
 outreach/

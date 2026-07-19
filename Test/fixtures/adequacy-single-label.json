@@ -1,0 +1,10 @@
+{
+  "monitors": ["m"],
+  "states": [
+    {
+      "id": "state-1",
+      "label": "only-label",
+      "evidence": {"m": "observed"}
+    }
+  ]
+}
